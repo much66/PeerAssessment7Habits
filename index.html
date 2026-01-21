@@ -74,8 +74,33 @@
 
         .page-section { display: none; }
         .page-section.active { display: block; }
-        .section-divider { border-top: 2px dashed #eee; margin: 30px 0; position: relative; }
-        .section-divider span { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #fff; padding: 0 15px; color: #999; font-size: 0.8rem; font-weight: 600; }
+        
+        /* --- PERBAIKAN DIVIDER (FLEXBOX + CENTER) --- */
+        .section-divider { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; /* Pastikan di tengah */
+            margin: 25px 0; /* Margin sedikit dikurangi */
+            gap: 10px; /* Jarak antara garis dan teks */
+            width: 100%; /* Lebar penuh */
+        }
+        .section-divider span { 
+            padding: 0; 
+            color: #999; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            white-space: nowrap; /* Mencegah turun baris */
+            background: transparent;
+            text-align: center;
+        }
+        .section-divider::before, 
+        .section-divider::after { 
+            content: ""; 
+            flex: 1; /* Garis otomatis memendek menyesuaikan teks */
+            border-top: 2px dashed #eee; 
+            height: 1px;
+            min-width: 20px; /* Minimal ada garis sedikit */
+        }
         
         /* Survey Styling - UPDATED HEADER STYLE */
         .section-header { 
@@ -184,7 +209,6 @@
             .result-bar-area { flex: 1; height: 12px; margin-bottom: 0; background: #e0e0e0; min-width: 0; }
             .result-score { flex: 0 0 auto; width: auto; min-width: 35px; text-align: right; font-size: 1rem; margin-top: 0; margin-left: 10px; }
             
-            /* FIX 1 BARIS SEJAJAR DI MOBILE */
             .section-header { 
                 padding: 12px 15px; 
                 font-size: 0.95rem;
@@ -206,7 +230,8 @@
             .user-profile { flex-direction: column; align-items: flex-start; gap: 15px; }
             .profile-right { text-align: left !important; width: 100%; border-top: 1px dashed #ddd; padding-top: 10px; }
             
-            .section-divider span { font-size: 0.65rem; padding: 0 10px; }
+            /* Penyesuaian font divider di mobile agar muat */
+            .section-divider span { font-size: 0.65rem; padding: 0 5px; }
             
             .btn { padding: 12px; font-size: 0.95rem; margin-top: 15px; }
         }
