@@ -75,34 +75,34 @@
         .page-section { display: none; }
         .page-section.active { display: block; }
         
-        /* --- DIVIDER --- */
+        /* --- PERBAIKAN DIVIDER (FLEXBOX + CENTER) --- */
         .section-divider { 
             display: flex; 
             align-items: center; 
-            justify-content: center; 
-            margin: 25px 0; 
-            gap: 10px; 
-            width: 100%; 
+            justify-content: center; /* Pastikan di tengah */
+            margin: 25px 0; /* Margin sedikit dikurangi */
+            gap: 10px; /* Jarak antara garis dan teks */
+            width: 100%; /* Lebar penuh */
         }
         .section-divider span { 
             padding: 0; 
             color: #999; 
             font-size: 0.8rem; 
             font-weight: 600; 
-            white-space: nowrap; 
+            white-space: nowrap; /* Mencegah turun baris */
             background: transparent;
             text-align: center;
         }
         .section-divider::before, 
         .section-divider::after { 
             content: ""; 
-            flex: 1; 
+            flex: 1; /* Garis otomatis memendek menyesuaikan teks */
             border-top: 2px dashed #eee; 
             height: 1px;
-            min-width: 20px;
+            min-width: 20px; /* Minimal ada garis sedikit */
         }
         
-        /* Survey Styling */
+        /* Survey Styling - UPDATED HEADER STYLE */
         .section-header { 
             background: var(--secondary); 
             color: var(--primary); 
@@ -115,11 +115,32 @@
             align-items: center; 
             flex-direction: row; 
         }
+        
+        /* Add decorative strip */
         .section-header::before {
-            content: ''; display: block; width: 6px; height: 24px; background-color: var(--primary); border-radius: 4px; margin-right: 15px; flex-shrink: 0;
+            content: '';
+            display: block;
+            width: 6px;
+            height: 24px;
+            background-color: var(--primary);
+            border-radius: 4px;
+            margin-right: 15px;
+            flex-shrink: 0;
         }
-        .section-header span:first-child { flex-grow: 1; }
-        .header-score-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; margin-left: 10px; }
+
+        .section-header span:first-child {
+            flex-grow: 1; /* Title takes available space */
+        }
+
+        .header-score-badge { 
+            background: var(--primary); 
+            color: white; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            white-space: nowrap;
+            margin-left: 10px;
+        }
         
         .question-item { background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 12px; padding: 25px; margin-bottom: 20px; }
         .question-text { font-size: 1.05rem; margin-bottom: 20px; text-align: justify; font-weight: 500; color: #2c3e50; }
@@ -143,9 +164,7 @@
         .result-bar-area { flex: 1; background: #e0e0e0; height: 12px; border-radius: 6px; overflow: hidden; }
         .result-bar-fill { height: 100%; }
         .result-score { width: 50px; text-align: right; font-weight: 700; }
-        
         .final-score-box { background: linear-gradient(135deg, var(--primary), #1a4a8d); color: white; padding: 15px 25px; border-radius: 12px; text-align: center; margin-top: 30px; }
-        
         .summary-link-box { background: white; border: 2px solid var(--primary); color: var(--primary); padding: 15px; border-radius: 12px; text-align: center; margin-top: 15px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
         .summary-link-box:hover { background: var(--primary); color: white; }
         
@@ -271,8 +290,6 @@
                     <div id="finalScoreDisplay" style="font-size:3rem; font-weight:700;">0</div>
                 </div>
 
-                <p id="pdfNotification" style="display:none;">✅ A copy has been sent to your email.</p>
-
                 <button class="btn btn-outline" style="margin-top:20px;" onclick="location.reload()">Assess Another Teammate</button>
             </div>
         </div>
@@ -302,7 +319,6 @@
                     </div>
                     <div class="profile-right">
                         <small style="color:#999; text-transform:uppercase; font-size:0.75rem; font-weight:600;">Reviewed By</small>
-                        <!-- CHANGE: Anonymous Assessor -->
                         <h3 id="detAssessor" style="margin:0; color:var(--primary);">Peer Reviewer</h3>
                         <span id="detDate" class="date-badge" style="margin-top:5px; display:inline-block;">Date</span>
                     </div>
@@ -381,7 +397,8 @@
                 filtered.forEach(e => {
                     const div = document.createElement('div');
                     div.className = "custom-dropdown-item";
-                    div.innerHTML = `<strong>${e.name}</strong> <span style='font-size:0.8rem; color:#666;'>(${e.dept || e.team})</span>`;
+                    // UPDATE: Remove department from display
+                    div.innerHTML = `<strong>${e.name}</strong>`;
                     div.onclick = function() { selectAssessor(e); };
                     dropdown.appendChild(div);
                 });
@@ -516,7 +533,7 @@
                 summary: { totalScore: grandTotal, habitScores: habitScores },
                 answers: detailAnswers
             };
-            
+
             document.getElementById('resAssessorName').innerText = payload.assessor.name;
             document.getElementById('resTargetName').innerText = payload.target.name;
             document.getElementById('finalScoreDisplay').innerText = grandTotal;
@@ -536,7 +553,6 @@
                 res.data.forEach(item => {
                     const d = new Date(item.timestamp).toLocaleString('en-GB');
                     const itemStr = encodeURIComponent(JSON.stringify(item));
-                    // Hide assessor name in list too
                     html += `<div class="history-item"><div><strong>Review for Me</strong><br><small>${d}</small></div><button class="btn btn-outline" style="margin:0; width:auto; padding:5px 15px;" onclick="loadDetail('${item.id}', '${itemStr}')">View</button></div>`;
                 });
                 document.getElementById('historyList').innerHTML = html;
@@ -548,7 +564,6 @@
             activeSubmissionId = id;
             document.getElementById('detName').innerText = data.name;
             document.getElementById('detEmail').innerText = document.getElementById('historyEmailInput').value; 
-            // HIDE ACTUAL NAME, SHOW ANONYMOUS
             document.getElementById('detAssessor').innerText = "Peer Reviewer"; 
             document.getElementById('detDate').innerText = new Date(data.timestamp).toLocaleDateString();
             document.getElementById('detTotalScore').innerText = data.totalScore;
