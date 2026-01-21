@@ -41,7 +41,7 @@
         
         .form-group { margin-bottom: 20px; position: relative; } /* Added relative pos */
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--primary); }
-        .form-group input, .form-group select { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: 10px; box-sizing: border-box; font-size: 15px; font-family: 'Poppins', sans-serif; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 15px; font-family: 'Poppins', sans-serif; }
         .form-group input:focus { border-color: var(--accent); outline: none; }
         .form-group input::placeholder { color: #aaa; font-style: italic; font-weight: 300; }
         .form-group input:disabled { background-color: #f5f5f5; cursor: not-allowed; }
@@ -63,7 +63,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .custom-dropdown-item {
-            padding: 12px 16px;
+            padding: 10px 12px;
             cursor: pointer;
             border-bottom: 1px solid #f0f0f0;
             font-size: 0.95rem;
@@ -74,27 +74,29 @@
 
         .page-section { display: none; }
         .page-section.active { display: block; }
-        .section-divider { border-top: 2px dashed #eee; margin: 30px 0; position: relative; }
-        .section-divider span { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #fff; padding: 0 15px; color: #999; font-size: 0.8rem; font-weight: 600; }
         
-        .section-header { 
-            background: var(--secondary); 
-            color: var(--primary); 
-            padding: 15px 20px; 
-            border-radius: 8px; 
-            font-weight: 700; 
-            font-size: 1.1rem; 
-            margin: 30px 0 20px 0; 
+        /* --- PERBAIKAN DIVIDER (FLEXBOX UNTUK MOBILE) --- */
+        .section-divider { 
             display: flex; 
-            align-items: center;
+            align-items: center; 
+            justify-content: center; 
+            margin: 30px 0; 
         }
-        .section-header::before {
-            content: ''; display: block; width: 6px; height: 24px; background-color: var(--primary); border-radius: 4px; margin-right: 15px; flex-shrink: 0;
+        .section-divider span { 
+            padding: 0 10px; 
+            color: #999; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            white-space: nowrap; /* Mencegah turun baris */
         }
-        .section-header span:first-child { flex-grow: 1; }
-        .header-score-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; margin-left: 10px; }
+        .section-divider::before, 
+        .section-divider::after { 
+            content: ""; 
+            flex: 1; /* Garis otomatis memendek menyesuaikan teks */
+            border-top: 2px dashed #eee; 
+        }
         
-        .question-item { background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 12px; padding: 30px; margin-bottom: 25px; }
+        .question-item { background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 12px; padding: 25px; margin-bottom: 20px; }
         .question-text { font-size: 1.05rem; margin-bottom: 20px; text-align: justify; font-weight: 500; color: #2c3e50; }
         .scale-line-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 10px; }
         .scale-label-side { font-size: 0.8rem; font-weight: 600; flex: 0 0 75px; text-align: center; line-height: 1.2; }
@@ -131,81 +133,46 @@
 
         footer { text-align: center; padding: 25px; color: #888; font-size: 0.85rem; margin-top: auto; font-weight: 400; }
         
-        /* --- OPTIMISASI MOBILE TERBARU --- */
+        /* Survey CSS */
+        .section-header { 
+            background: var(--secondary); 
+            color: var(--primary); 
+            padding: 15px 20px; 
+            border-radius: 8px; 
+            font-weight: 700; 
+            font-size: 1.1rem; 
+            margin: 30px 0 20px 0; 
+            display: flex; 
+            align-items: center;
+        }
+        .section-header::before {
+            content: ''; display: block; width: 6px; height: 24px; background-color: var(--primary); border-radius: 4px; margin-right: 15px; flex-shrink: 0;
+        }
+        .section-header span:first-child { flex-grow: 1; }
+        .header-score-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; margin-left: 10px; }
+
         @media screen and (max-width: 768px) {
-            .container { padding: 10px; } /* Padding container sedikit dikurangi */
-            .card { 
-                padding: 25px 20px; 
-                margin-bottom: 15px; 
-                box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Shadow lebih halus */
-            }
-
-            /* Judul lebih proporsional */
-            h1 { font-size: 1.5rem; line-height: 1.3; margin-bottom: 5px; }
-            h2 { font-size: 1.3rem; }
-            p { font-size: 0.95rem; }
-
-            /* Logo header lebih kecil sedikit */
-            .logo-container img { height: 32px; }
-            .logo-text { font-size: 1rem; }
-
-            /* Input form lebih nyaman di mata */
-            .form-group { margin-bottom: 20px; }
-            .form-group input, .form-group select { 
-                padding: 12px; /* Sedikit lebih compact tapi tetap nyaman */
-                font-size: 14px; 
-            }
-
-            /* Pertanyaan lebih lega kiri-kanan (tidak sumpek) */
-            .question-item { 
-                padding: 20px 15px; /* Padding kiri-kanan dikurangi sedikit agar teks lebih lebar */
-                margin-bottom: 20px;
-            }
-            .question-text { 
-                font-size: 0.95rem; 
-                line-height: 1.6; /* Spasi baris lega */
-                margin-bottom: 20px; 
-                text-align: left; /* Rata kiri sering lebih mudah dibaca di layar sempit daripada justify yg berantakan */
-            }
-
-            /* Scale Labels & Options */
-            .scale-line-wrapper { gap: 10px; margin-top: 10px; }
-            .scale-label-side { 
-                font-size: 0.75rem; 
-                flex: 0 0 65px; 
-                line-height: 1.2;
-            }
-            .scale-option input { width: 22px; height: 22px; } /* Ukuran radio button pas untuk jempol */
-            .scale-track { height: 2px; }
-
-            /* Result Row - Stacked Layout for better readability */
-            .result-row { flex-wrap: wrap; padding: 15px; gap: 8px; }
-            .result-label { flex: 0 0 100%; width: 100%; margin-bottom: 5px; font-size: 0.95rem; padding-right: 0; text-align: left; }
+            .scale-label-side { font-size: 0.7rem; flex: 0 0 60px; }
+            .scale-option input { width: 18px; height: 18px; }
+            .question-text { font-size: 0.95rem; }
+            .result-row { flex-wrap: wrap; padding: 15px; gap: 5px; }
+            .result-label { flex: 0 0 100%; width: 100%; margin-bottom: 8px; font-size: 0.95rem; padding-right: 0; text-align: left; }
             .result-bar-area { flex: 1; height: 12px; margin-bottom: 0; background: #e0e0e0; min-width: 0; }
             .result-score { flex: 0 0 auto; width: auto; min-width: 35px; text-align: right; font-size: 1rem; margin-top: 0; margin-left: 10px; }
-            
-            /* Header Habit */
-            .section-header { 
-                padding: 12px 15px; 
-                font-size: 1rem; 
-                margin: 25px 0 15px 0;
-            }
-            .header-score-badge { margin-left: auto; font-size: 0.8rem; }
-            
-            .history-item { flex-direction: column; align-items: flex-start; gap: 10px; padding: 15px; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 5px; padding: 15px; font-size: 1rem; }
+            .header-score-badge { align-self: flex-start; margin-top: 5px; margin-left: 0; }
+            .history-item { flex-direction: column; align-items: flex-start; gap: 10px; }
             .history-item button { width: 100%; margin-top: 5px; }
             .history-item > div:last-child { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-            
             .user-profile { flex-direction: column; align-items: flex-start; gap: 15px; }
             .profile-right { text-align: left !important; width: 100%; border-top: 1px dashed #ddd; padding-top: 10px; }
+            
+            /* Mobile Divider Adjustment */
+            .section-divider span { font-size: 0.7rem; padding: 0 8px; }
         }
-        
         @media screen and (max-width: 380px) {
             .scale-label-side { font-size: 0.65rem; flex: 0 0 50px; } 
-            h1 { font-size: 1.3rem; }
-            .logo-text { font-size: 0.9rem; }
         }
-
         @media print {
              header, footer, .btn, .btn-outline, #introPage, #historyPage, #surveyPage, .summary-link-box, .btn-ai, .ai-box { display: none !important; }
              #historyDetailPage, #resultPage { display: block !important; width: 100%; }
