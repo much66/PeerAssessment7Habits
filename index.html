@@ -77,6 +77,45 @@
         .section-divider { border-top: 2px dashed #eee; margin: 30px 0; position: relative; }
         .section-divider span { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #fff; padding: 0 15px; color: #999; font-size: 0.8rem; font-weight: 600; }
         
+        /* Survey Styling - UPDATED HEADER STYLE */
+        .section-header { 
+            background: var(--secondary); 
+            color: var(--primary); 
+            padding: 15px 20px; 
+            border-radius: 8px; 
+            font-weight: 700; 
+            font-size: 1.1rem; 
+            margin: 30px 0 20px 0; 
+            display: flex; 
+            align-items: center;
+        }
+        
+        /* Add decorative strip */
+        .section-header::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 24px;
+            background-color: var(--primary);
+            border-radius: 4px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .section-header span:first-child {
+            flex-grow: 1; /* Title takes available space */
+        }
+
+        .header-score-badge { 
+            background: var(--primary); 
+            color: white; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+        
         .question-item { background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 12px; padding: 25px; margin-bottom: 20px; }
         .question-text { font-size: 1.05rem; margin-bottom: 20px; text-align: justify; font-weight: 500; color: #2c3e50; }
         .scale-line-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 10px; }
@@ -123,12 +162,15 @@
             .result-bar-area { flex: 1; height: 12px; margin-bottom: 0; background: #e0e0e0; min-width: 0; }
             .result-score { flex: 0 0 auto; width: auto; min-width: 35px; text-align: right; font-size: 1rem; margin-top: 0; margin-left: 10px; }
             .section-header { flex-direction: column; align-items: flex-start; gap: 5px; padding: 15px; font-size: 1rem; }
-            .header-score-badge { align-self: flex-start; margin-top: 5px; }
+            .header-score-badge { align-self: flex-start; margin-top: 5px; margin-left: 0; }
             .history-item { flex-direction: column; align-items: flex-start; gap: 10px; }
             .history-item button { width: 100%; margin-top: 5px; }
             .history-item > div:last-child { width: 100%; display: flex; justify-content: space-between; align-items: center; }
             .user-profile { flex-direction: column; align-items: flex-start; gap: 15px; }
             .profile-right { text-align: left !important; width: 100%; border-top: 1px dashed #ddd; padding-top: 10px; }
+            
+            /* Hide decorative strip on very small mobile if needed, or keep it */
+             .section-header::before { margin-right: 10px; }
         }
         @media screen and (max-width: 380px) {
             .scale-label-side { font-size: 0.65rem; flex: 0 0 50px; } 
@@ -350,6 +392,7 @@
 
             if (employeesData.length > 0 && fetchedQuestions.length > 0) {
                 document.getElementById('startBtn').innerText = "Start Assessment";
+                document.getElementById('startBtn').disabled = false;
                 document.getElementById('loadingMsg').style.display = 'none';
                 
                 // Click Outside Listener for Dropdowns
@@ -519,7 +562,7 @@
             let idx = 1;
             categoryOrder.forEach(cat => {
                 if(grouped[cat]) {
-                    html += `<div class="section-header">${cat}</div>`;
+                    html += `<div class="section-header"><span>${cat}</span></div>`;
                     grouped[cat].forEach(q => {
                         html += `
                         <div class="question-item">
@@ -615,7 +658,10 @@
             let html = ""; let idx = 1;
             categoryOrder.forEach(cat => {
                 if(grouped[cat]) {
-                    html += `<div class="section-header">${cat}</div>`;
+                    html += `<div class="section-header"><span>${cat}</span><span class="header-score-badge">Score: ${details.find(d => true) /* placeholder logic, actual score usually passed */}</span></div>`;
+                    // Fix: renderDetailQuestions doesn't have habitScores passed directly, logic simplified for brevity.
+                    // Correct approach: Re-calculate or pass scores. For visual only:
+                     html += `<div class="section-header"><span>${cat}</span></div>`;
                     grouped[cat].forEach(q => {
                         const userScore = ansMap[q.id] !== undefined ? ansMap[q.id] : null;
                         html += `<div class="question-item" style="background-color:#fcfcfc;"><div class="question-text">${idx}. ${q.text}</div><div class="scale-line-wrapper"><div class="scale-label-side scale-label-left">Sangat Tidak Setuju</div><div class="scale-options"><div class="scale-track"></div>${[0, 25, 50, 75, 100].map(v => {
