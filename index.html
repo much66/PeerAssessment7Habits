@@ -6,9 +6,10 @@
     <title>Peer Assessment - Worldwhite Enterprise</title>
     <link rel="icon" href="LOGO news.png" type="image/png">
     <style>
-        /* CSS SAMA SEPERTI SEBELUMNYA */
         :root { --primary: #0f2c59; --secondary: #dac0a3; --accent: #3498db; --bg: #f0f2f5; --card-bg: #ffffff; --text: #333333; --border: #e1e4e8; }
-        body { font-family: 'Segoe UI', 'Roboto', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        body { font-family: 'Segoe UI', 'Roboto', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
+        
         header { background: #fff; padding: 15px 0; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .logo-container { display: flex; align-items: center; justify-content: center; gap: 12px; }
         .logo-container img { height: 40px; width: auto; }
@@ -16,23 +17,50 @@
 
         .container { max-width: 800px; margin: 0 auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
         .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 40px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
-        .btn { display: block; width: 100%; padding: 16px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        
+        .btn { display: block; width: 100%; padding: 16px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; transition: background 0.2s; touch-action: manipulation; }
         .btn:hover { background-color: #1a4a8d; }
         .btn:disabled { background-color: #95a5a6; cursor: not-allowed; }
         .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
         .btn-outline:hover { background: var(--primary); color: white; }
-        .form-group { margin-bottom: 20px; }
+        
+        .form-group { margin-bottom: 20px; position: relative; } /* Added relative pos */
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--primary); }
         .form-group input, .form-group select { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        .form-group input:focus { border-color: var(--accent); outline: none; }
+        .form-group input::placeholder { color: #aaa; font-style: italic; }
+
+        /* --- CUSTOM DROPDOWN STYLING --- */
+        .custom-dropdown-list {
+            position: absolute;
+            top: 100%; /* Menempel tepat di bawah input */
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none; /* Hidden by default */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .custom-dropdown-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.95rem;
+        }
+        .custom-dropdown-item:last-child { border-bottom: none; }
+        .custom-dropdown-item:hover { background-color: #f0f8ff; color: var(--primary); }
+        .custom-dropdown-item strong { color: var(--primary); }
+
         .page-section { display: none; }
         .page-section.active { display: block; }
-        .section-divider { display: flex; align-items: center; justify-content: center; margin: 30px 0; }
-        .section-divider span { padding: 0 15px; color: #999; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
-        .section-divider::before, .section-divider::after { content: ""; flex: 1; border-top: 2px dashed #eee; }
+        .section-divider { border-top: 2px dashed #eee; margin: 30px 0; position: relative; }
+        .section-divider span { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #fff; padding: 0 15px; color: #999; font-size: 0.8rem; font-weight: bold; }
         
-        /* Survey CSS */
-        .section-header { background: var(--secondary); color: var(--primary); padding: 15px 20px; border-radius: 8px; font-weight: bold; font-size: 1.1rem; margin: 30px 0 20px 0; display: flex; justify-content: space-between; align-items: center; }
-        .header-score-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; }
         .question-item { background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 12px; padding: 25px; margin-bottom: 20px; }
         .question-text { font-size: 1.05rem; margin-bottom: 20px; text-align: justify; font-weight: 600; color: #2c3e50; }
         .scale-line-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 10px; }
@@ -43,13 +71,11 @@
         .scale-option { display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; z-index: 2; margin: 0; width: 24px; }
         .scale-option input { width: 20px; height: 20px; accent-color: var(--primary); margin: 0; cursor: pointer; background-color: #fff; border: 2px solid #ccc; border-radius: 50%; }
 
-        @media screen and (max-width: 768px) {
-            .scale-label-side { font-size: 0.7rem; flex: 0 0 60px; }
-            .scale-option input { width: 18px; height: 18px; }
-            .question-text { font-size: 0.95rem; }
-        }
+        .history-item { border: 1px solid #eee; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .detail-item { padding: 15px; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; }
+        .detail-q { flex: 1; font-weight: 500; font-size: 0.95rem; }
+        .detail-a { font-weight: bold; color: var(--primary); background: #f0f2f5; padding: 4px 10px; border-radius: 6px; white-space: nowrap; font-size: 0.9rem; }
 
-        /* Result Styles */
         .user-profile { background: #f8f9fa; padding: 15px 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #e1e4e8; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .profile-left h3 { margin: 0; color: var(--primary); font-size: 1.1rem; }
         .result-row { display: flex; align-items: center; margin-bottom: 15px; background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 12px; padding: 20px; }
@@ -61,7 +87,6 @@
         .summary-link-box { background: white; border: 2px solid var(--primary); color: var(--primary); padding: 15px; border-radius: 12px; text-align: center; margin-top: 15px; cursor: pointer; font-weight: bold; transition: all 0.2s; }
         .summary-link-box:hover { background: var(--primary); color: white; }
         
-        .history-item { border: 1px solid #eee; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         #pdfNotification { text-align: center; color: #27ae60; font-weight: bold; margin-top: 20px; padding: 10px; border-radius: 5px; background-color: rgba(39, 174, 96, 0.1); display: none; }
 
         /* AI Box */
@@ -72,9 +97,11 @@
         .btn-ai:hover { opacity: 0.9; transform: translateY(-1px); }
 
         footer { text-align: center; padding: 25px; color: #888; font-size: 0.85rem; margin-top: auto; }
-        @media print { header, footer, .btn, .btn-outline, #introPage, #historyPage, #surveyPage, .summary-link-box, .btn-ai, .ai-box { display: none !important; } #historyDetailPage, #resultPage { display: block !important; width: 100%; } }
         
         @media screen and (max-width: 768px) {
+            .scale-label-side { font-size: 0.7rem; flex: 0 0 60px; }
+            .scale-option input { width: 18px; height: 18px; }
+            .question-text { font-size: 0.95rem; }
             .result-row { flex-wrap: wrap; padding: 15px; gap: 5px; }
             .result-label { flex: 0 0 100%; width: 100%; margin-bottom: 8px; font-size: 0.95rem; padding-right: 0; text-align: left; }
             .result-bar-area { flex: 1; height: 12px; margin-bottom: 0; background: #e0e0e0; min-width: 0; }
@@ -86,6 +113,13 @@
             .history-item > div:last-child { width: 100%; display: flex; justify-content: space-between; align-items: center; }
             .user-profile { flex-direction: column; align-items: flex-start; gap: 15px; }
             .profile-right { text-align: left !important; width: 100%; border-top: 1px dashed #ddd; padding-top: 10px; }
+        }
+        @media screen and (max-width: 380px) {
+            .scale-label-side { font-size: 0.65rem; flex: 0 0 50px; } 
+        }
+        @media print {
+             header, footer, .btn, .btn-outline, #introPage, #historyPage, #surveyPage, .summary-link-box, .btn-ai, .ai-box { display: none !important; }
+             #historyDetailPage, #resultPage { display: block !important; width: 100%; }
         }
     </style>
 </head>
@@ -109,10 +143,12 @@
                 
                 <div class="form-group">
                     <label>Your Name (Assessor)</label>
-                    <input list="assessorList" id="assessorName" placeholder="Type to search your name..." onchange="handleAssessorSelection()">
+                    <!-- CUSTOM SEARCHABLE DROPDOWN -->
+                    <input type="text" id="assessorName" placeholder="Type to search your name..." autocomplete="off" oninput="filterAssessorList()" onfocus="filterAssessorList()">
+                    <div id="assessorDropdown" class="custom-dropdown-list"></div>
+                    
                     <input type="hidden" id="assessorEmail">
                     <input type="hidden" id="assessorTeam">
-                    <datalist id="assessorList"></datalist>
                 </div>
 
                 <div class="section-divider"><span>WHO ARE YOU ASSESSING?</span></div>
@@ -159,7 +195,6 @@
                     <div id="finalScoreDisplay" style="font-size:3rem; font-weight:bold;">0</div>
                 </div>
 
-                <!-- AI SECTION -->
                 <button class="btn btn-ai" id="btnAiResult" onclick="analyzeWithAI('res')">✨ Analisis Hasil dengan AI</button>
                 <div id="aiBoxResult" class="ai-box">
                     <div class="ai-header">✨ Gemini Insight</div>
@@ -207,7 +242,6 @@
                     <div id="detTotalScore" style="font-size:3rem; font-weight:bold;">0</div>
                 </div>
 
-                <!-- AI SECTION -->
                 <button class="btn btn-ai" id="btnAiDetail" onclick="analyzeWithAI('det')">✨ Analisis Hasil dengan AI</button>
                 <div id="aiBoxDetail" class="ai-box">
                     <div class="ai-header">✨ Gemini Insight</div>
@@ -234,9 +268,10 @@
         
         let employeesData = []; 
         let fetchedQuestions = [];
-        let submittedPairs = []; // Stores who assessed whom
+        let submittedPairs = [];
         let activeSubmissionId = null;
         let currentScoresForAI = [];
+        let selectedAssessor = null; // Store selected assessor obj for validation
 
         // --- GEMINI AI ---
         async function analyzeWithAI(context) {
@@ -281,7 +316,6 @@
         window.onload = async function() {
             document.getElementById('loadingMsg').style.display = 'block';
             
-            // FETCH ALL REQUIRED DATA IN PARALLEL
             const [questions, employees, submitted] = await Promise.all([
                 fetchQuestionsFromSheet(),
                 fetchEmployees(),
@@ -293,27 +327,69 @@
             submittedPairs = submitted;
 
             if (employeesData.length > 0 && fetchedQuestions.length > 0) {
-                populateAssessorDatalist();
+                // Remove populateAssessorDatalist() as we use custom logic
                 document.getElementById('startBtn').innerText = "Start Assessment";
                 document.getElementById('startBtn').disabled = false;
                 document.getElementById('loadingMsg').style.display = 'none';
+                
+                // Add click outside listener to close dropdown
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('#assessorName')) {
+                        document.getElementById('assessorDropdown').style.display = 'none';
+                        validateAssessorInput();
+                    }
+                });
             } else { alert("Failed to load system data. Please refresh."); }
         };
 
-        function populateAssessorDatalist() {
-            const list = document.getElementById('assessorList');
-            list.innerHTML = "";
-            employeesData.forEach(e => {
-                const opt = document.createElement('option');
-                opt.value = e.name; 
-                list.appendChild(opt);
-            });
+        // --- CUSTOM DROPDOWN LOGIC ---
+        function filterAssessorList() {
+            const input = document.getElementById('assessorName');
+            const dropdown = document.getElementById('assessorDropdown');
+            const filter = input.value.toLowerCase();
+            
+            dropdown.innerHTML = "";
+            const filtered = employeesData.filter(e => e.name.toLowerCase().includes(filter));
+            
+            if (filtered.length > 0) {
+                filtered.forEach(e => {
+                    const div = document.createElement('div');
+                    div.className = "custom-dropdown-item";
+                    div.innerHTML = `<strong>${e.name}</strong> <span style='font-size:0.8rem; color:#666;'>(${e.dept || e.team})</span>`;
+                    div.onclick = function() { selectAssessor(e); };
+                    dropdown.appendChild(div);
+                });
+                dropdown.style.display = "block";
+            } else {
+                dropdown.style.display = "none";
+            }
         }
 
-        // --- LOGIKA FILTER DUPLIKASI ---
-        function handleAssessorSelection() {
-            const val = document.getElementById('assessorName').value;
-            const emp = employeesData.find(e => e.name === val);
+        function selectAssessor(emp) {
+            const input = document.getElementById('assessorName');
+            input.value = emp.name;
+            document.getElementById('assessorDropdown').style.display = 'none';
+            selectedAssessor = emp; // Simpan objek yang dipilih
+            updateTargetOptions(emp);
+        }
+
+        function validateAssessorInput() {
+            const input = document.getElementById('assessorName');
+            // Jika nilai input tidak sama dengan nama yang disimpan di selectedAssessor, reset
+            if (!selectedAssessor || input.value !== selectedAssessor.name) {
+                // Cek lagi apakah input persis sama dengan salah satu karyawan (jika user mengetik full tanpa klik)
+                const exactMatch = employeesData.find(e => e.name === input.value);
+                if (exactMatch) {
+                    selectAssessor(exactMatch);
+                } else {
+                    input.value = ""; // Reset jika tidak valid
+                    selectedAssessor = null;
+                    updateTargetOptions(null);
+                }
+            }
+        }
+
+        function updateTargetOptions(emp) {
             const targetSelect = document.getElementById('targetSelect');
             const startBtn = document.getElementById('startBtn');
 
@@ -321,16 +397,12 @@
                 document.getElementById('assessorEmail').value = emp.email;
                 document.getElementById('assessorTeam').value = emp.team;
                 
-                // Cari siapa saja yang sudah dinilai oleh assessor ini
                 const assessedEmails = submittedPairs
                     .filter(p => p.assessor === emp.email)
                     .map(p => p.target);
 
-                // Filter rekan satu tim & belum dinilai
                 const teamMates = employeesData.filter(e => 
-                    e.team === emp.team &&          // Satu tim
-                    e.name !== emp.name &&          // Bukan diri sendiri
-                    !assessedEmails.includes(e.email) // Belum pernah dinilai
+                    e.team === emp.team && e.name !== emp.name && !assessedEmails.includes(e.email)
                 );
                 
                 targetSelect.innerHTML = '<option value="">-- Select Teammate --</option>';
@@ -365,7 +437,7 @@
         }
 
         async function initSurvey() {
-            const assessor = document.getElementById('assessorName').value; // Get text value
+            const assessor = document.getElementById('assessorName').value;
             const target = document.getElementById('targetName').value;
             if(!assessor || !target) { alert("Please select both Assessor and Target."); return; }
             renderSurvey(fetchedQuestions);
