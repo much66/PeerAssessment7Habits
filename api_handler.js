@@ -1,11 +1,15 @@
 /**
- * API Handler - Production Version (Peer Assessment V15 - FIX DOWNLOAD)
+ * API Handler - Production Version (Peer Assessment V14)
  * Worldwhite Enterprise
+ * * Pastikan URL Script di bawah ini adalah URL '/exec' dari deployment terbaru.
  */
 
 // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyIn9PYBizOntMkDumCKf4oAhejp03pRCNqzcbq6xvYGMOPui0qUyBqMQcGhdWmJ5FQ/exec'; 
 
+/**
+ * 1. MENGAMBIL DATA KARYAWAN (Untuk Dropdown Assessor & Target)
+ */
 async function fetchEmployees() {
     if (!SCRIPT_URL || SCRIPT_URL.includes('/dev')) return [];
     try {
@@ -18,6 +22,9 @@ async function fetchEmployees() {
     }
 }
 
+/**
+ * 2. MENGAMBIL DATA PASANGAN YANG SUDAH DINILAI (Untuk Cek Duplikasi)
+ */
 async function fetchSubmittedPairs() {
     if (!SCRIPT_URL || SCRIPT_URL.includes('/dev')) return [];
     try {
@@ -29,6 +36,9 @@ async function fetchSubmittedPairs() {
     }
 }
 
+/**
+ * 3. MENGAMBIL DAFTAR PERTANYAAN
+ */
 async function fetchQuestionsFromSheet() {
     if (!SCRIPT_URL || SCRIPT_URL.includes('/dev')) return [];
     try { 
@@ -41,7 +51,7 @@ async function fetchQuestionsFromSheet() {
 }
 
 /**
- * FIXED: Removed 'no-cors' to allow reading response ID
+ * 4. MENYIMPAN DATA PENILAIAN (SUBMIT)
  */
 async function saveToGoogleSheet(payload) {
     payload.action = 'submit'; 
@@ -52,17 +62,17 @@ async function saveToGoogleSheet(payload) {
     }
     
     try {
-        // [FIX] Hapus mode: 'no-cors' agar kita bisa dapat ID balik
+        // Menggunakan mode 'no-cors' untuk kompatibilitas maksimal
+        // Backend akan mengurus pengiriman email di sisi server
         const response = await fetch(SCRIPT_URL, { 
             method: 'POST', 
+            mode: 'no-cors', 
             body: JSON.stringify(payload), 
             headers: { "Content-Type": "text/plain" } 
         });
         
-        const result = await response.json(); // Sekarang kita bisa baca JSON ini
-        console.log("Submission sent. ID:", result.id);
-        return result; // Mengembalikan { status: 'success', id: '...' }
-
+        console.log("Submission sent.");
+        return { status: 'success' };
     } catch (error) { 
         console.error("Save Error:", error);
         return { status: 'error' }; 
@@ -74,6 +84,9 @@ async function saveToGoogleSheet(payload) {
     }
 }
 
+/**
+ * 5. MENCARI RIWAYAT (HISTORY CHECK)
+ */
 async function fetchUserHistory(email, phone) {
     try {
         const payload = { 
@@ -81,6 +94,8 @@ async function fetchUserHistory(email, phone) {
             email: email, 
             phone: phone 
         };
+        
+        // Menggunakan POST standard agar bisa membaca balasan JSON
         const response = await fetch(SCRIPT_URL, { 
             method: 'POST', 
             body: JSON.stringify(payload), 
@@ -92,6 +107,9 @@ async function fetchUserHistory(email, phone) {
     }
 }
 
+/**
+ * 6. MENGAMBIL DETAIL JAWABAN (DETAIL VIEW)
+ */
 async function fetchSubmissionDetails(submissionId) {
     try {
         const payload = { 
@@ -109,6 +127,9 @@ async function fetchSubmissionDetails(submissionId) {
     }
 }
 
+/**
+ * 7. DOWNLOAD PDF HASIL
+ */
 async function requestDownloadPdf(submissionId) {
     try {
         const payload = { 
@@ -126,6 +147,9 @@ async function requestDownloadPdf(submissionId) {
     }
 }
 
+/**
+ * 8. KIRIM ULANG EMAIL (MANUAL RESEND)
+ */
 async function requestResendEmail(submissionId) {
     try {
         const payload = { 
