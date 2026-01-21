@@ -14,7 +14,6 @@
     <style>
         :root { --primary: #0f2c59; --secondary: #dac0a3; --accent: #3498db; --bg: #f0f2f5; --card-bg: #ffffff; --text: #333333; --border: #e1e4e8; }
         
-        /* UPDATE FONT FAMILY HERE */
         body { 
             font-family: 'Poppins', sans-serif; 
             background-color: var(--bg); 
@@ -45,6 +44,7 @@
         .form-group input, .form-group select { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 15px; font-family: 'Poppins', sans-serif; }
         .form-group input:focus { border-color: var(--accent); outline: none; }
         .form-group input::placeholder { color: #aaa; font-style: italic; font-weight: 300; }
+        .form-group input:disabled { background-color: #f5f5f5; cursor: not-allowed; }
 
         /* --- CUSTOM DROPDOWN STYLING --- */
         .custom-dropdown-list {
@@ -159,7 +159,7 @@
                 
                 <div class="form-group">
                     <label>Your Name (Assessor)</label>
-                    <!-- CUSTOM SEARCHABLE DROPDOWN -->
+                    <!-- CUSTOM SEARCHABLE DROPDOWN (ASSESSOR) -->
                     <input type="text" id="assessorName" placeholder="Type to search your name..." autocomplete="off" oninput="filterAssessorList()" onfocus="filterAssessorList()">
                     <div id="assessorDropdown" class="custom-dropdown-list"></div>
                     
@@ -171,9 +171,11 @@
 
                 <div class="form-group">
                     <label>Target Name (Person to Assess)</label>
-                    <select id="targetSelect" disabled>
-                        <option value="">Select your name above first...</option>
-                    </select>
+                    <!-- CUSTOM SEARCHABLE DROPDOWN (TARGET) -->
+                    <input type="text" id="targetSearchInput" placeholder="Select your name above first..." autocomplete="off" oninput="filterTargetList()" onfocus="filterTargetList()" disabled>
+                    <div id="targetDropdown" class="custom-dropdown-list"></div>
+
+                    <!-- HIDDEN VALUES -->
                     <input type="hidden" id="targetName">
                     <input type="hidden" id="targetEmail">
                     <input type="hidden" id="targetPhone">
@@ -289,7 +291,9 @@
         let submittedPairs = [];
         let activeSubmissionId = null;
         let currentScoresForAI = [];
-        let selectedAssessor = null; // Store selected assessor obj for validation
+        let selectedAssessor = null; 
+        let selectedTarget = null;
+        let eligibleTargets = []; // Store eligible targets for current assessor
 
         // --- GEMINI AI ---
         async function analyzeWithAI(context) {
@@ -345,22 +349,24 @@
             submittedPairs = submitted;
 
             if (employeesData.length > 0 && fetchedQuestions.length > 0) {
-                // Remove populateAssessorDatalist() as we use custom logic
                 document.getElementById('startBtn').innerText = "Start Assessment";
-                document.getElementById('startBtn').disabled = false;
                 document.getElementById('loadingMsg').style.display = 'none';
                 
-                // Add click outside listener to close dropdown
+                // Click Outside Listener for Dropdowns
                 document.addEventListener('click', function(e) {
                     if (!e.target.closest('#assessorName')) {
                         document.getElementById('assessorDropdown').style.display = 'none';
                         validateAssessorInput();
                     }
+                    if (!e.target.closest('#targetSearchInput')) {
+                        document.getElementById('targetDropdown').style.display = 'none';
+                        validateTargetInput();
+                    }
                 });
             } else { alert("Failed to load system data. Please refresh."); }
         };
 
-        // --- CUSTOM DROPDOWN LOGIC ---
+        // --- ASSESSOR DROPDOWN LOGIC ---
         function filterAssessorList() {
             const input = document.getElementById('assessorName');
             const dropdown = document.getElementById('assessorDropdown');
@@ -378,86 +384,130 @@
                     dropdown.appendChild(div);
                 });
                 dropdown.style.display = "block";
-            } else {
-                dropdown.style.display = "none";
-            }
+            } else { dropdown.style.display = "none"; }
         }
 
         function selectAssessor(emp) {
             const input = document.getElementById('assessorName');
             input.value = emp.name;
             document.getElementById('assessorDropdown').style.display = 'none';
-            selectedAssessor = emp; // Simpan objek yang dipilih
-            updateTargetOptions(emp);
+            selectedAssessor = emp; 
+            
+            // Set Hidden Assessor Info
+            document.getElementById('assessorEmail').value = emp.email;
+            document.getElementById('assessorTeam').value = emp.team;
+            
+            // Prepare Target Data
+            prepareTargetData(emp);
         }
 
         function validateAssessorInput() {
             const input = document.getElementById('assessorName');
-            // Jika nilai input tidak sama dengan nama yang disimpan di selectedAssessor, reset
             if (!selectedAssessor || input.value !== selectedAssessor.name) {
-                // Cek lagi apakah input persis sama dengan salah satu karyawan (jika user mengetik full tanpa klik)
                 const exactMatch = employeesData.find(e => e.name === input.value);
-                if (exactMatch) {
-                    selectAssessor(exactMatch);
-                } else {
-                    input.value = ""; // Reset jika tidak valid
-                    selectedAssessor = null;
-                    updateTargetOptions(null);
+                if (exactMatch) { selectAssessor(exactMatch); } 
+                else { 
+                    input.value = ""; 
+                    selectedAssessor = null; 
+                    resetTarget(); // Reset target section if assessor invalid
                 }
             }
         }
 
-        function updateTargetOptions(emp) {
-            const targetSelect = document.getElementById('targetSelect');
-            const startBtn = document.getElementById('startBtn');
-
-            if (emp) {
-                document.getElementById('assessorEmail').value = emp.email;
-                document.getElementById('assessorTeam').value = emp.team;
-                
-                const assessedEmails = submittedPairs
-                    .filter(p => p.assessor === emp.email)
-                    .map(p => p.target);
-
-                const teamMates = employeesData.filter(e => 
-                    e.team === emp.team && e.name !== emp.name && !assessedEmails.includes(e.email)
-                );
-                
-                targetSelect.innerHTML = '<option value="">-- Select Teammate --</option>';
-                if(teamMates.length === 0) { 
-                    targetSelect.innerHTML += '<option disabled>No eligible teammates (all assessed)</option>'; 
-                } else {
-                    teamMates.forEach(tm => {
-                        const opt = document.createElement('option');
-                        opt.value = tm.id; opt.text = tm.name;
-                        targetSelect.appendChild(opt);
-                    });
-                }
-                targetSelect.disabled = false;
-            } else {
-                document.getElementById('assessorEmail').value = "";
-                targetSelect.innerHTML = '<option value="">Select your name above first...</option>';
-                targetSelect.disabled = true; startBtn.disabled = true;
-            }
+        // --- TARGET DROPDOWN LOGIC ---
+        function prepareTargetData(assessorEmp) {
+            const targetInput = document.getElementById('targetSearchInput');
             
-            targetSelect.onchange = function() {
-                 if(this.value) {
-                     const selectedTm = employeesData.find(e => String(e.id) === String(this.value));
-                     if(selectedTm) {
-                         document.getElementById('targetName').value = selectedTm.name;
-                         document.getElementById('targetEmail').value = selectedTm.email;
-                         document.getElementById('targetPhone').value = selectedTm.phone;
-                         document.getElementById('targetTeam').value = selectedTm.team;
-                         startBtn.disabled = false;
-                     }
-                 } else { startBtn.disabled = true; }
-            };
+            // Filter: Same Team, Not Self, Not Already Assessed
+            const assessedEmails = submittedPairs
+                .filter(p => p.assessor === assessorEmp.email)
+                .map(p => p.target);
+
+            eligibleTargets = employeesData.filter(e => 
+                e.team === assessorEmp.team && 
+                e.name !== assessorEmp.name && 
+                !assessedEmails.includes(e.email)
+            );
+
+            // Enable/Disable Target Input
+            if (eligibleTargets.length > 0) {
+                targetInput.disabled = false;
+                targetInput.placeholder = "Type to search colleague...";
+                targetInput.value = ""; // Reset value
+                selectedTarget = null;
+                document.getElementById('startBtn').disabled = true; // Disable start until valid target picked
+            } else {
+                targetInput.disabled = true;
+                targetInput.placeholder = "No eligible teammates (all assessed)";
+                targetInput.value = "";
+                selectedTarget = null;
+                document.getElementById('startBtn').disabled = true;
+            }
         }
 
+        function resetTarget() {
+            const targetInput = document.getElementById('targetSearchInput');
+            targetInput.value = "";
+            targetInput.disabled = true;
+            targetInput.placeholder = "Select your name above first...";
+            selectedTarget = null;
+            eligibleTargets = [];
+            document.getElementById('startBtn').disabled = true;
+        }
+
+        function filterTargetList() {
+            const input = document.getElementById('targetSearchInput');
+            const dropdown = document.getElementById('targetDropdown');
+            const filter = input.value.toLowerCase();
+            
+            dropdown.innerHTML = "";
+            // Filter from eligibleTargets ONLY
+            const filtered = eligibleTargets.filter(e => e.name.toLowerCase().includes(filter));
+            
+            if (filtered.length > 0) {
+                filtered.forEach(e => {
+                    const div = document.createElement('div');
+                    div.className = "custom-dropdown-item";
+                    div.innerHTML = `<strong>${e.name}</strong>`;
+                    div.onclick = function() { selectTarget(e); };
+                    dropdown.appendChild(div);
+                });
+                dropdown.style.display = "block";
+            } else { dropdown.style.display = "none"; }
+        }
+
+        function selectTarget(emp) {
+            const input = document.getElementById('targetSearchInput');
+            input.value = emp.name;
+            document.getElementById('targetDropdown').style.display = 'none';
+            selectedTarget = emp;
+            
+            // Set Hidden Target Info
+            document.getElementById('targetName').value = emp.name;
+            document.getElementById('targetEmail').value = emp.email;
+            document.getElementById('targetPhone').value = emp.phone;
+            document.getElementById('targetTeam').value = emp.team;
+            
+            // Enable Start Button
+            document.getElementById('startBtn').disabled = false;
+        }
+
+        function validateTargetInput() {
+            const input = document.getElementById('targetSearchInput');
+            if (!selectedTarget || input.value !== selectedTarget.name) {
+                const exactMatch = eligibleTargets.find(e => e.name === input.value);
+                if (exactMatch) { selectTarget(exactMatch); } 
+                else { 
+                    input.value = ""; 
+                    selectedTarget = null; 
+                    document.getElementById('startBtn').disabled = true;
+                }
+            }
+        }
+
+        // --- NAVIGATION & SURVEY ---
         async function initSurvey() {
-            const assessor = document.getElementById('assessorName').value;
-            const target = document.getElementById('targetName').value;
-            if(!assessor || !target) { alert("Please select both Assessor and Target."); return; }
+            if(!selectedAssessor || !selectedTarget) { alert("Please select both Assessor and Target."); return; }
             renderSurvey(fetchedQuestions);
             showPage('surveyPage');
         }
