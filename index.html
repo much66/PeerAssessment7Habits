@@ -74,10 +74,23 @@
 
         .page-section { display: none; }
         .page-section.active { display: block; }
-        .section-divider { border-top: 2px dashed #eee; margin: 30px 0; position: relative; }
-        .section-divider span { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #fff; padding: 0 15px; color: #999; font-size: 0.8rem; font-weight: 600; }
         
-        /* Survey Styling - UPDATED HEADER STYLE */
+        /* UPDATED SECTION DIVIDER */
+        .section-divider { border-top: 2px dashed #eee; margin: 30px 0; position: relative; }
+        .section-divider span { 
+            position: absolute; 
+            top: -12px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: #fff; 
+            padding: 0 15px; 
+            color: #999; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            white-space: nowrap; /* Mencegah teks turun baris di HP */
+        }
+        
+        /* Survey Styling */
         .section-header { 
             background: var(--secondary); 
             color: var(--primary); 
@@ -90,7 +103,6 @@
             align-items: center;
         }
         
-        /* Add decorative strip */
         .section-header::before {
             content: '';
             display: block;
@@ -102,9 +114,7 @@
             flex-shrink: 0;
         }
 
-        .section-header span:first-child {
-            flex-grow: 1; /* Title takes available space */
-        }
+        .section-header span:first-child { flex-grow: 1; }
 
         .header-score-badge { 
             background: var(--primary); 
@@ -153,42 +163,55 @@
 
         footer { text-align: center; padding: 25px; color: #888; font-size: 0.85rem; margin-top: auto; font-weight: 400; }
         
-        /* --- OPTIMISASI MOBILE --- */
+        /* --- OPTIMISASI MOBILE TERBARU --- */
         @media screen and (max-width: 768px) {
-            .container { padding: 15px; } /* Kurangi padding container */
-            .card { padding: 20px 15px; } /* Kurangi padding card */
-
-            h1 { font-size: 1.4rem; line-height: 1.3; } /* Kecilkan judul utama */
-            h2 { font-size: 1.25rem; }
-
-            .logo-text { font-size: 0.95rem; } /* Sesuaikan logo */
-
-            /* Perbaikan Skala Pilihan Ganda agar Compact */
-            .scale-line-wrapper { gap: 5px; margin-top: 15px; }
-            .scale-label-side { 
-                font-size: 0.65rem; /* Font lebih kecil */
-                flex: 0 0 55px; /* Lebar label lebih sempit */
-                line-height: 1.2;
+            .container { padding: 15px; }
+            .card { padding: 20px 15px; }
+            
+            /* 1. Divider Text: Perkecil font agar 1 baris */
+            .section-divider span { 
+                font-size: 0.65rem; 
+                padding: 0 10px; 
             }
-            .scale-options { padding: 0 2px; }
-            .scale-option input { width: 18px; height: 18px; } /* Radio button sedikit lebih kecil */
 
-            /* Perbaikan Teks Pertanyaan */
-            .question-item { padding: 15px 10px; }
+            /* 2. Judul Habit: Sesuaikan font dan padding agar tidak turun aneh */
+            .section-header { 
+                flex-direction: row; /* Tetap satu baris jika muat */
+                align-items: center; 
+                gap: 10px; 
+                padding: 12px 15px; 
+                font-size: 0.9rem; /* Perkecil font judul habit */
+            }
+            .section-header::before {
+                margin-right: 10px; /* Kurangi jarak strip */
+            }
+            .header-score-badge {
+                margin-left: auto; /* Dorong ke kanan */
+                font-size: 0.75rem;
+                padding: 3px 10px;
+            }
+
+            /* 3. Teks Pertanyaan: Tambah padding agar tidak mepet */
+            .question-item { 
+                padding: 20px 20px; /* Tambah padding horizontal */
+            }
             .question-text { 
-                font-size: 0.9rem; /* Ukuran font lebih pas untuk mobile */
-                margin-bottom: 12px; 
-                line-height: 1.5;
+                font-size: 0.95rem; /* Font sedikit lebih kecil tapi terbaca */
+                margin-bottom: 15px; 
+                text-align: justify;
             }
 
-            /* Perbaikan Hasil */
+            /* Scale Labels & Options */
+            .scale-line-wrapper { gap: 8px; margin-top: 15px; }
+            .scale-label-side { font-size: 0.7rem; flex: 0 0 60px; line-height: 1.2; }
+            .scale-option input { width: 18px; height: 18px; }
+            .scale-track { height: 2px; }
+
+            /* Result Row */
             .result-row { flex-wrap: wrap; padding: 15px; gap: 5px; }
-            .result-label { flex: 0 0 100%; width: 100%; margin-bottom: 8px; font-size: 0.9rem; padding-right: 0; text-align: left; }
+            .result-label { flex: 0 0 100%; width: 100%; margin-bottom: 8px; font-size: 0.95rem; padding-right: 0; text-align: left; }
             .result-bar-area { flex: 1; height: 12px; margin-bottom: 0; background: #e0e0e0; min-width: 0; }
             .result-score { flex: 0 0 auto; width: auto; min-width: 35px; text-align: right; font-size: 1rem; margin-top: 0; margin-left: 10px; }
-            
-            .section-header { flex-direction: column; align-items: flex-start; gap: 5px; padding: 15px; font-size: 1rem; }
-            .header-score-badge { align-self: flex-start; margin-top: 5px; margin-left: 0; }
             
             .history-item { flex-direction: column; align-items: flex-start; gap: 10px; }
             .history-item button { width: 100%; margin-top: 5px; }
@@ -198,10 +221,10 @@
             .profile-right { text-align: left !important; width: 100%; border-top: 1px dashed #ddd; padding-top: 10px; }
         }
         
-        /* HP Sangat Kecil (iPhone SE dll) */
         @media screen and (max-width: 380px) {
-            .scale-label-side { font-size: 0.6rem; flex: 0 0 45px; } 
-            h1 { font-size: 1.25rem; }
+            .scale-label-side { font-size: 0.65rem; flex: 0 0 50px; } 
+            h1 { font-size: 1.5rem; }
+            .section-divider span { font-size: 0.6rem; } /* Extra kecil untuk HP kecil */
         }
 
         @media print {
@@ -585,6 +608,8 @@
             if(!selectedAssessor || !selectedTarget) { alert("Please select both Assessor and Target."); return; }
             renderSurvey(fetchedQuestions);
             showPage('surveyPage');
+            // Auto scroll to top
+            window.scrollTo(0,0);
         }
 
         function renderSurvey(questions) {
