@@ -54,6 +54,7 @@ async function saveToGoogleSheet(payload) {
         // Agar kita bisa mendapatkan balasan 'id' dari server untuk tombol Download PDF
         const response = await fetch(SCRIPT_URL, { 
             method: 'POST', 
+            mode: 'no-cors',
             body: JSON.stringify(payload), 
             headers: { "Content-Type": "text/plain" } 
         });
