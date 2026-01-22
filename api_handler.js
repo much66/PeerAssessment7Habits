@@ -5,7 +5,7 @@
  */
 
 // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyIn9PYBizOntMkDumCKf4oAhejp03pRCNqzcbq6xvYGMOPui0qUyBqMQcGhdWmJ5FQ/exec'; 
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyol6UoAyLAZXKkwf49hEufE9OANR4RcuOYy9Jnml0bCWiTITfs3CkV_TM4LrYhXLFB/exec'; 
 
 async function fetchEmployees() {
     if (!SCRIPT_URL || SCRIPT_URL.includes('/dev')) return [];
