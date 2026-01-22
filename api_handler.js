@@ -7,9 +7,6 @@
 // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyIn9PYBizOntMkDumCKf4oAhejp03pRCNqzcbq6xvYGMOPui0qUyBqMQcGhdWmJ5FQ/exec'; 
 
-/**
- * 1. MENGAMBIL DATA KARYAWAN (Untuk Dropdown Assessor & Target)
- */
 async function fetchEmployees() {
     if (!SCRIPT_URL || SCRIPT_URL.includes('/dev')) return [];
     try {
@@ -22,9 +19,6 @@ async function fetchEmployees() {
     }
 }
 
-/**
- * 2. MENGAMBIL DATA PASANGAN YANG SUDAH DINILAI (Untuk Cek Duplikasi)
- */
 async function fetchSubmittedPairs() {
     if (!SCRIPT_URL || SCRIPT_URL.includes('/dev')) return [];
     try {
@@ -36,9 +30,6 @@ async function fetchSubmittedPairs() {
     }
 }
 
-/**
- * 3. MENGAMBIL DAFTAR PERTANYAAN
- */
 async function fetchQuestionsFromSheet() {
     if (!SCRIPT_URL || SCRIPT_URL.includes('/dev')) return [];
     try { 
@@ -50,11 +41,6 @@ async function fetchQuestionsFromSheet() {
     }
 }
 
-/**
- * 4. MENYIMPAN DATA PENILAIAN (SUBMIT)
- * [RESTORED] Menggunakan mode: 'no-cors' agar data terkirim tanpa error di GitHub Pages.
- * Backend akan menangani pengiriman email secara otomatis setelah data diterima.
- */
 async function saveToGoogleSheet(payload) {
     payload.action = 'submit'; 
     const btn = document.querySelector('.btn-submit-final');
@@ -64,21 +50,21 @@ async function saveToGoogleSheet(payload) {
     }
     
     try {
-        // Mode 'no-cors' mengirim request "opaque". Kita tidak bisa membaca respons JSON.
-        // Tapi ini menjamin data terkirim meski lintas domain.
-        await fetch(SCRIPT_URL, { 
+        // [PERBAIKAN] Menggunakan fetch standar (tanpa no-cors)
+        // Agar kita bisa mendapatkan balasan 'id' dari server untuk tombol Download PDF
+        const response = await fetch(SCRIPT_URL, { 
             method: 'POST', 
-            mode: 'no-cors', 
             body: JSON.stringify(payload), 
             headers: { "Content-Type": "text/plain" } 
         });
         
-        console.log("Submission sent (Blind Mode).");
-        return { status: 'success' };
+        const result = await response.json();
+        console.log("Submission sent. ID:", result.id);
+        return result; 
+
     } catch (error) { 
         console.error("Save Error:", error);
-        // Alert error hanya jika benar-benar gagal koneksi
-        alert("Gagal terhubung ke server. Cek koneksi internet Anda.");
+        alert("Gagal terhubung. Pastikan script dideploy sebagai 'Anyone'.");
         return { status: 'error' }; 
     } finally { 
         if(btn) { 
@@ -88,86 +74,50 @@ async function saveToGoogleSheet(payload) {
     }
 }
 
-/**
- * 5. MENCARI RIWAYAT (HISTORY CHECK)
- */
 async function fetchUserHistory(email, phone) {
     try {
-        const payload = { 
-            action: 'get_history', 
-            email: email, 
-            phone: phone 
-        };
-        
-        // Fetch History tetap butuh baca JSON, jadi gunakan standard fetch.
-        // Google Apps Script 'Anyone' deployment mendukung CORS untuk ini.
+        const payload = { action: 'get_history', email: email, phone: phone };
         const response = await fetch(SCRIPT_URL, { 
             method: 'POST', 
             body: JSON.stringify(payload), 
             headers: { "Content-Type": "text/plain" } 
         });
         return await response.json();
-    } catch (error) { 
-        return { status: 'error', message: "Failed to fetch history." }; 
-    }
+    } catch (error) { return { status: 'error', message: "Failed to fetch history." }; }
 }
 
-/**
- * 6. MENGAMBIL DETAIL JAWABAN (DETAIL VIEW)
- */
 async function fetchSubmissionDetails(submissionId) {
     try {
-        const payload = { 
-            action: 'get_submission_details', 
-            id: submissionId 
-        };
+        const payload = { action: 'get_submission_details', id: submissionId };
         const response = await fetch(SCRIPT_URL, { 
             method: 'POST', 
             body: JSON.stringify(payload), 
             headers: { "Content-Type": "text/plain" } 
         });
         return await response.json();
-    } catch (error) { 
-        return { status: 'error', message: "Failed to load details." }; 
-    }
+    } catch (error) { return { status: 'error', message: "Failed to load details." }; }
 }
 
-/**
- * 7. DOWNLOAD PDF HASIL
- */
 async function requestDownloadPdf(submissionId) {
     try {
-        const payload = { 
-            action: 'download_pdf', 
-            id: submissionId 
-        };
+        const payload = { action: 'download_pdf', id: submissionId };
         const response = await fetch(SCRIPT_URL, { 
             method: 'POST', 
             body: JSON.stringify(payload), 
             headers: { "Content-Type": "text/plain" } 
         });
         return await response.json();
-    } catch (error) { 
-        return { status: 'error', message: "Download failed." }; 
-    }
+    } catch (error) { return { status: 'error', message: "Download failed." }; }
 }
 
-/**
- * 8. KIRIM ULANG EMAIL (MANUAL RESEND)
- */
 async function requestResendEmail(submissionId) {
     try {
-        const payload = { 
-            action: 'resend_email', 
-            id: submissionId 
-        };
+        const payload = { action: 'resend_email', id: submissionId };
         const response = await fetch(SCRIPT_URL, { 
             method: 'POST', 
             body: JSON.stringify(payload), 
             headers: { "Content-Type": "text/plain" } 
         });
         return await response.json();
-    } catch (error) { 
-        return { status: 'error', message: "Email resend failed." }; 
-    }
+    } catch (error) { return { status: 'error', message: "Email resend failed." }; }
 }
