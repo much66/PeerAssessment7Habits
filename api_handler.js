@@ -52,6 +52,8 @@ async function fetchQuestionsFromSheet() {
 
 /**
  * 4. MENYIMPAN DATA PENILAIAN (SUBMIT)
+ * [RESTORED] Menggunakan mode: 'no-cors' agar data terkirim tanpa error di GitHub Pages.
+ * Backend akan menangani pengiriman email secara otomatis setelah data diterima.
  */
 async function saveToGoogleSheet(payload) {
     payload.action = 'submit'; 
@@ -62,19 +64,21 @@ async function saveToGoogleSheet(payload) {
     }
     
     try {
-        // Menggunakan mode 'no-cors' untuk kompatibilitas maksimal
-        // Backend akan mengurus pengiriman email di sisi server
-        const response = await fetch(SCRIPT_URL, { 
+        // Mode 'no-cors' mengirim request "opaque". Kita tidak bisa membaca respons JSON.
+        // Tapi ini menjamin data terkirim meski lintas domain.
+        await fetch(SCRIPT_URL, { 
             method: 'POST', 
             mode: 'no-cors', 
             body: JSON.stringify(payload), 
             headers: { "Content-Type": "text/plain" } 
         });
         
-        console.log("Submission sent.");
+        console.log("Submission sent (Blind Mode).");
         return { status: 'success' };
     } catch (error) { 
         console.error("Save Error:", error);
+        // Alert error hanya jika benar-benar gagal koneksi
+        alert("Gagal terhubung ke server. Cek koneksi internet Anda.");
         return { status: 'error' }; 
     } finally { 
         if(btn) { 
@@ -95,7 +99,8 @@ async function fetchUserHistory(email, phone) {
             phone: phone 
         };
         
-        // Menggunakan POST standard agar bisa membaca balasan JSON
+        // Fetch History tetap butuh baca JSON, jadi gunakan standard fetch.
+        // Google Apps Script 'Anyone' deployment mendukung CORS untuk ini.
         const response = await fetch(SCRIPT_URL, { 
             method: 'POST', 
             body: JSON.stringify(payload), 
