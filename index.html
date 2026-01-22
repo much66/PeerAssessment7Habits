@@ -6,7 +6,6 @@
     <title>Peer Assessment - Worldwhite Enterprise</title>
     <link rel="icon" href="LOGO news.png" type="image/png">
     
-    <!-- IMPORT GOOGLE FONT: POPPINS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,22 +13,9 @@
     <style>
         :root { --primary: #0f2c59; --secondary: #dac0a3; --accent: #3498db; --bg: #f0f2f5; --card-bg: #ffffff; --text: #333333; --border: #e1e4e8; }
         
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background-color: var(--bg); 
-            color: var(--text); 
-            margin: 0; padding: 0; 
-            line-height: 1.6; 
-            min-height: 100vh; 
-            display: flex; flex-direction: column; 
-            -webkit-font-smoothing: antialiased; 
-        }
-        
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
         header { background: #fff; padding: 15px 0; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .logo-container { display: flex; align-items: center; justify-content: center; gap: 12px; }
-        .logo-container img { height: 40px; width: auto; }
-        .logo-text { font-size: 1.1rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
-
+        .logo-container { display: flex; align-items: center; justify-content: center; gap: 12px; } .logo-container img { height: 40px; width: auto; } .logo-text { font-size: 1.1rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
         .container { max-width: 800px; margin: 0 auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
         .card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 40px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
         
@@ -39,164 +25,42 @@
         .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
         .btn-outline:hover { background: var(--primary); color: white; }
         
-        .form-group { margin-bottom: 20px; position: relative; } /* Added relative pos */
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--primary); }
-        .form-group input, .form-group select { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 15px; font-family: 'Poppins', sans-serif; }
-        .form-group input:focus { border-color: var(--accent); outline: none; }
-        .form-group input::placeholder { color: #aaa; font-style: italic; font-weight: 300; }
-        .form-group input:disabled { background-color: #f5f5f5; cursor: not-allowed; }
+        .form-group { margin-bottom: 20px; position: relative; } .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--primary); } .form-group input, .form-group select { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 15px; font-family: 'Poppins', sans-serif; }
+        .custom-dropdown-list { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid var(--border); border-top: none; border-radius: 0 0 8px 8px; max-height: 200px; overflow-y: auto; z-index: 1000; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .custom-dropdown-item { padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #f0f0f0; font-size: 0.95rem; } .custom-dropdown-item:hover { background-color: #f0f8ff; color: var(--primary); }
 
-        /* --- CUSTOM DROPDOWN STYLING --- */
-        .custom-dropdown-list {
-            position: absolute;
-            top: 100%; /* Menempel tepat di bawah input */
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid var(--border);
-            border-top: none;
-            border-radius: 0 0 8px 8px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none; /* Hidden by default */
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .custom-dropdown-item {
-            padding: 10px 12px;
-            cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 0.95rem;
-        }
-        .custom-dropdown-item:last-child { border-bottom: none; }
-        .custom-dropdown-item:hover { background-color: #f0f8ff; color: var(--primary); }
-        .custom-dropdown-item strong { color: var(--primary); }
-
-        .page-section { display: none; }
-        .page-section.active { display: block; }
+        .page-section { display: none; } .page-section.active { display: block; }
+        .section-divider { display: flex; align-items: center; justify-content: center; margin: 25px 0; gap: 10px; width: 100%; } .section-divider span { padding: 0; color: #999; font-size: 0.8rem; font-weight: 600; white-space: nowrap; background: transparent; text-align: center; } .section-divider::before, .section-divider::after { content: ""; flex: 1; border-top: 2px dashed #eee; height: 1px; min-width: 20px; }
         
-        /* --- DIVIDER --- */
-        .section-divider { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            margin: 25px 0; 
-            gap: 10px; 
-            width: 100%; 
-        }
-        .section-divider span { 
-            padding: 0; 
-            color: #999; 
-            font-size: 0.8rem; 
-            font-weight: 600; 
-            white-space: nowrap; 
-            background: transparent;
-            text-align: center;
-        }
-        .section-divider::before, 
-        .section-divider::after { 
-            content: ""; 
-            flex: 1; 
-            border-top: 2px dashed #eee; 
-            height: 1px;
-            min-width: 20px;
-        }
-        
-        /* Survey Styling */
-        .section-header { 
-            background: var(--secondary); 
-            color: var(--primary); 
-            padding: 15px 20px; 
-            border-radius: 8px; 
-            font-weight: 700; 
-            font-size: 1.1rem; 
-            margin: 30px 0 20px 0; 
-            display: flex; 
-            align-items: center; 
-            flex-direction: row; 
-        }
-        .section-header::before {
-            content: ''; display: block; width: 6px; height: 24px; background-color: var(--primary); border-radius: 4px; margin-right: 15px; flex-shrink: 0;
-        }
-        .section-header span:first-child { flex-grow: 1; }
-        .header-score-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; margin-left: 10px; }
-        
-        .question-item { background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 12px; padding: 25px; margin-bottom: 20px; }
-        .question-text { font-size: 1.05rem; margin-bottom: 20px; text-align: justify; font-weight: 500; color: #2c3e50; }
-        .scale-line-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 10px; }
-        .scale-label-side { font-size: 0.8rem; font-weight: 600; flex: 0 0 75px; text-align: center; line-height: 1.2; }
-        .scale-label-left { color: #e74c3c; } .scale-label-right { color: #27ae60; }
-        .scale-options { flex-grow: 1; display: flex; justify-content: space-between; position: relative; padding: 0 5px; align-items: center; height: 36px; }
-        .scale-track { position: absolute; top: 50%; left: 5px; right: 5px; height: 3px; background: #d1d5db; z-index: 1; transform: translateY(-50%); border-radius: 2px; }
-        .scale-option { display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; z-index: 2; margin: 0; width: 24px; }
-        .scale-option input { width: 20px; height: 20px; accent-color: var(--primary); margin: 0; cursor: pointer; background-color: #fff; border: 2px solid #ccc; border-radius: 50%; }
+        .question-item { background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 12px; padding: 25px; margin-bottom: 20px; } .question-text { font-size: 1.05rem; margin-bottom: 20px; text-align: justify; font-weight: 500; color: #2c3e50; }
+        .scale-line-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 10px; } .scale-label-side { font-size: 0.8rem; font-weight: 600; flex: 0 0 75px; text-align: center; line-height: 1.2; } .scale-label-left { color: #e74c3c; } .scale-label-right { color: #27ae60; }
+        .scale-options { flex-grow: 1; display: flex; justify-content: space-between; position: relative; padding: 0 5px; align-items: center; height: 36px; } .scale-track { position: absolute; top: 50%; left: 5px; right: 5px; height: 3px; background: #d1d5db; z-index: 1; transform: translateY(-50%); border-radius: 2px; }
+        .scale-option { display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; z-index: 2; margin: 0; width: 24px; } .scale-option input { width: 20px; height: 20px; accent-color: var(--primary); margin: 0; cursor: pointer; background-color: #fff; border: 2px solid #ccc; border-radius: 50%; }
 
-        .history-item { border: 1px solid #eee; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .detail-item { padding: 15px; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; }
-        .detail-q { flex: 1; font-weight: 500; font-size: 0.95rem; }
-        .detail-a { font-weight: 600; color: var(--primary); background: #f0f2f5; padding: 4px 10px; border-radius: 6px; white-space: nowrap; font-size: 0.9rem; }
-
+        /* Result Styles */
         .user-profile { background: #f8f9fa; padding: 15px 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #e1e4e8; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .profile-left h3 { margin: 0; color: var(--primary); font-size: 1.1rem; font-weight: 600; }
-        .profile-left p { margin: 2px 0 0 0; color: #666; font-size: 0.9rem; text-align: left; }
-        .profile-right { text-align: right; }
-        .date-badge { background: #fff; border: 1px solid #ccc; padding: 5px 10px; border-radius: 6px; font-size: 0.85rem; color: #555; white-space: nowrap; display: inline-block; }
-
         .result-row { display: flex; align-items: center; margin-bottom: 15px; background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 12px; padding: 20px; }
-        .result-label { flex: 0 0 40%; font-weight: 500; padding-right: 15px; }
-        .result-bar-area { flex: 1; background: #e0e0e0; height: 12px; border-radius: 6px; overflow: hidden; }
-        .result-bar-fill { height: 100%; }
-        .result-score { width: 50px; text-align: right; font-weight: 700; }
-        
+        .result-label { flex: 0 0 40%; font-weight: 500; padding-right: 15px; } .result-bar-area { flex: 1; background: #e0e0e0; height: 12px; border-radius: 6px; overflow: hidden; } .result-bar-fill { height: 100%; } .result-score { width: 50px; text-align: right; font-weight: 700; }
         .final-score-box { background: linear-gradient(135deg, var(--primary), #1a4a8d); color: white; padding: 15px 25px; border-radius: 12px; text-align: center; margin-top: 30px; }
-        .summary-link-box { background: white; border: 2px solid var(--primary); color: var(--primary); padding: 15px; border-radius: 12px; text-align: center; margin-top: 15px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
-        .summary-link-box:hover { background: var(--primary); color: white; }
-        
+        .summary-link-box { background: white; border: 2px solid var(--primary); color: var(--primary); padding: 15px; border-radius: 12px; text-align: center; margin-top: 15px; cursor: pointer; font-weight: 600; transition: all 0.2s; } .summary-link-box:hover { background: var(--primary); color: white; }
+        .section-header { background: var(--secondary); color: var(--primary); padding: 15px 20px; border-radius: 8px; font-weight: 700; font-size: 1.1rem; margin: 30px 0 20px 0; display: flex; align-items: center; flex-direction: row; } .section-header::before { content: ''; display: block; width: 6px; height: 24px; background-color: var(--primary); border-radius: 4px; margin-right: 15px; flex-shrink: 0; } .section-header span:first-child { flex-grow: 1; } .header-score-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; white-space: nowrap; margin-left: 10px; }
+        .history-item { border: 1px solid #eee; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         #pdfNotification { text-align: center; color: #27ae60; font-weight: 600; margin-top: 20px; padding: 10px; border-radius: 5px; background-color: rgba(39, 174, 96, 0.1); display: none; }
-
+        
         footer { text-align: center; padding: 25px; color: #888; font-size: 0.85rem; margin-top: auto; font-weight: 400; }
         
         @media screen and (max-width: 768px) {
-            .container { padding: 15px; }
-            .card { padding: 20px 15px; }
-            h1 { font-size: 1.25rem; line-height: 1.3; margin-bottom: 5px; }
-            h2 { font-size: 1.15rem; }
-            p { font-size: 0.85rem; }
-            .logo-text { font-size: 0.9rem; }
-
-            .form-group label { font-size: 0.85rem; margin-bottom: 5px; }
-            .form-group input, .form-group select { padding: 10px 12px; font-size: 0.9rem; }
-
-            .scale-line-wrapper { gap: 8px; margin-top: 15px; }
-            .scale-label-side { font-size: 0.7rem; flex: 0 0 60px; line-height: 1.2; }
-            .scale-option input { width: 18px; height: 18px; }
-            .scale-track { height: 2px; }
-
-            .question-item { padding: 20px 15px; }
-            .question-text { font-size: 0.9rem; margin-bottom: 15px; text-align: justify; }
-
-            .result-row { flex-wrap: wrap; padding: 15px; gap: 5px; }
-            .result-label { flex: 0 0 100%; width: 100%; margin-bottom: 8px; font-size: 0.95rem; padding-right: 0; text-align: left; }
-            .result-bar-area { flex: 1; height: 12px; margin-bottom: 0; background: #e0e0e0; min-width: 0; }
-            .result-score { flex: 0 0 auto; width: auto; min-width: 35px; text-align: right; font-size: 1rem; margin-top: 0; margin-left: 10px; }
-            .section-header { padding: 12px 15px; font-size: 0.95rem; flex-direction: row; align-items: center; gap: 10px; }
-            .header-score-badge { align-self: auto; margin-top: 0; margin-left: auto; font-size: 0.75rem; }
-            .history-item { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .history-item button { width: 100%; margin-top: 5px; }
-            .history-item > div:last-child { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-            .user-profile { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .profile-right { text-align: left !important; width: 100%; border-top: 1px dashed #ddd; padding-top: 10px; }
-            .section-divider span { font-size: 0.65rem; padding: 0 5px; }
-            .btn { padding: 12px; font-size: 0.95rem; margin-top: 15px; }
+            .container { padding: 15px; } .card { padding: 20px 15px; }
+            h1 { font-size: 1.25rem; } h2 { font-size: 1.15rem; }
+            .scale-label-side { font-size: 0.7rem; flex: 0 0 60px; } .scale-option input { width: 18px; height: 18px; }
+            .question-text { font-size: 0.9rem; }
+            .result-row { flex-wrap: wrap; padding: 15px; gap: 5px; } .result-label { flex: 0 0 100%; padding-right: 0; text-align: left; } .result-bar-area { flex: 1; margin-bottom: 0; } .result-score { margin-top: 0; margin-left: 10px; }
+            .section-header { padding: 12px 15px; font-size: 0.95rem; } .header-score-badge { font-size: 0.75rem; }
+            .history-item { flex-direction: column; align-items: flex-start; gap: 10px; } .history-item button { width: 100%; margin-top: 5px; } .history-item > div:last-child { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+            .user-profile { flex-direction: column; align-items: flex-start; gap: 15px; } .profile-right { text-align: left !important; width: 100%; border-top: 1px dashed #ddd; padding-top: 10px; }
         }
-        @media screen and (max-width: 380px) {
-            .scale-label-side { font-size: 0.6rem; flex: 0 0 50px; } 
-            h1 { font-size: 1.15rem; }
-        }
-        @media print {
-             header, footer, .btn, .btn-outline, #introPage, #historyPage, #surveyPage, .summary-link-box, .btn-ai, .ai-box { display: none !important; }
-             #historyDetailPage, #resultPage { display: block !important; width: 100%; }
-        }
+        @media print { header, footer, .btn, .btn-outline, #introPage, #historyPage, #surveyPage, .summary-link-box { display: none !important; } #historyDetailPage, #resultPage { display: block !important; width: 100%; } }
     </style>
 </head>
 <body>
@@ -210,7 +74,7 @@
 
     <div class="container">
         
-        <!-- 1. INTRO & SELECTION -->
+        <!-- 1. INTRO -->
         <div id="introPage" class="page-section active">
             <div class="card">
                 <h1 style="color:#0f2c59; text-align:center; font-weight:700;">Peer Assessment</h1>
@@ -240,9 +104,7 @@
                 <div id="loadingMsg" style="text-align:center; color: #0f2c59; display:none; margin-top:20px;">Loading Data...</div>
 
                 <button class="btn" id="startBtn" onclick="initSurvey()" disabled>Start Assessment</button>
-                
-                <!-- CHECK HISTORY REMOVED FROM INTRO PAGE -->
-                
+                <button class="btn btn-outline" onclick="goToHistory()">Check My Feedback</button>
             </div>
         </div>
 
@@ -255,7 +117,7 @@
             </div>
         </div>
 
-        <!-- 3. RESULT -->
+        <!-- 3. RESULT (SUMMARY ONLY) -->
         <div id="resultPage" class="page-section">
             <div class="card">
                 <h2 style="text-align:center; color:#0f2c59; font-weight:700;">Submission Successful</h2>
@@ -265,7 +127,7 @@
                     <p style="color:#27ae60; font-weight:600;">A PDF report has been emailed to the target.</p>
                 </div>
 
-                <!-- SUMMARY CHART (BAR CHART KEMBALI MUNCUL) -->
+                <!-- SUMMARY CHART -->
                 <div id="scoreDetails"></div>
 
                 <div class="final-score-box">
@@ -275,26 +137,61 @@
 
                 <p id="pdfNotification" style="display:none;">✅ A copy has been sent to your email.</p>
 
-                <!-- TOMBOL DOWNLOAD PDF -->
+                <!-- DOWNLOAD BUTTON -->
                 <button class="btn btn-outline" id="btnDownloadResult" style="margin-top:20px;" onclick="downloadPdf(true)">Download PDF Result</button>
-                <button class="btn btn-outline" style="margin-top: 10px; border:none; color:#666;" onclick="location.reload()">Finish / Exit</button>
+                <button class="btn btn-outline" style="margin-top: 10px; border:none; color:#666;" onclick="location.reload()">Assess Another Teammate</button>
             </div>
         </div>
 
-        <!-- 4. HISTORY (ACCESS VIA CODE OR ADMIN ONLY IF BUTTON REMOVED) -->
+        <!-- 4. HISTORY CHECK -->
         <div id="historyPage" class="page-section">
-             <!-- ... content hidden ... -->
+            <div class="card">
+                <h2 style="font-weight:700;">Check My Feedback</h2>
+                <p style="text-align:center; color:#666; font-size:0.9rem;">View assessments regarding YOU.</p>
+                <div class="form-group"><label>Your Email</label><input type="email" id="historyEmailInput" placeholder="ex: example@gmail.com"></div>
+                <div class="form-group"><label>Your Phone Number</label><input type="tel" id="historyPhoneInput" placeholder="ex: 085xxxxxxxxx"></div>
+                <button class="btn" id="btnCheckHistory" onclick="checkHistory()">Search</button>
+                <button class="btn btn-outline" style="border:none; color:#666;" onclick="showPage('introPage')">Back</button>
+                <div id="historyList" style="margin-top: 30px;"></div>
+            </div>
         </div>
 
         <!-- 5. HISTORY DETAIL -->
         <div id="historyDetailPage" class="page-section">
-             <!-- ... content hidden ... -->
+            <div class="card">
+                <h2 style="text-align:center; font-weight:700;">Feedback Detail</h2>
+                <div class="user-profile">
+                    <div class="profile-left">
+                        <small style="color:#999; text-transform:uppercase; font-size:0.75rem; font-weight:600;">Review For (Target)</small>
+                        <h3 id="detName" style="margin:0; color:var(--primary);">Me</h3>
+                        <p id="detEmail" style="margin:0; color:#666; font-size:0.9rem;">Email</p>
+                    </div>
+                    <div class="profile-right">
+                        <small style="color:#999; text-transform:uppercase; font-size:0.75rem; font-weight:600;">Reviewed By</small>
+                        <h3 id="detAssessor" style="margin:0; color:var(--primary);">Peer Reviewer</h3>
+                        <span id="detDate" class="date-badge" style="margin-top:5px; display:inline-block;">Date</span>
+                    </div>
+                </div>
+                <div id="detailChartArea" style="margin-bottom:20px;"></div>
+                <div id="detailContainer"></div>
+                
+                <div class="final-score-box">
+                    <div style="font-weight:600;">OVERALL SCORE</div>
+                    <div id="detTotalScore" style="font-size:3rem; font-weight:700;">0</div>
+                </div>
+
+                <button class="btn btn-outline" style="margin-top:20px;" onclick="downloadPdf()">Download PDF Result</button>
+                <button class="btn btn-outline" id="btnResendEmail" style="margin-top: 10px;" onclick="triggerResendEmail()">Resend to Email</button>
+                
+                <div class="summary-link-box" onclick="backToHistoryList()">&larr; Back to History List</div>
+            </div>
         </div>
 
     </div>
 
     <script src="api_handler.js"></script>
     <script>
+        const apiKey = ""; 
         const categoryOrder = [
             "Habit 1: Be Proactive", "Habit 2: Begin with the End in Mind", "Habit 3: Put First Things First",
             "Emotional Bank Account", "Habit 4: Think Win-Win", "Habit 5: Seek First to Understand Then to Be Understood",
@@ -337,6 +234,7 @@
             } else { alert("Failed to load system data. Please refresh."); }
         };
 
+        // --- DROPDOWN & LOGIC (SAMA) ---
         function filterAssessorList() {
             const input = document.getElementById('assessorName');
             const dropdown = document.getElementById('assessorDropdown');
@@ -484,11 +382,13 @@
             document.getElementById('resTargetName').innerText = payload.target.name;
             document.getElementById('finalScoreDisplay').innerText = grandTotal;
             
-            // SHOW SUMMARY CHART ON RESULT PAGE
+            // SHOW SUMMARY CHART
             displayResult(habitScores);
 
+            // SAVE & GET ID
             const saveRes = await saveToGoogleSheet(payload);
             if(saveRes.id) activeSubmissionId = saveRes.id; 
+            
             showPage('resultPage');
         }
 
@@ -513,8 +413,79 @@
             btn.disabled = false; btn.innerText = "Download PDF Result";
         }
 
+        async function triggerResendEmail() {
+            if(!activeSubmissionId) return;
+            const btn = document.getElementById('btnResendEmail');
+            btn.disabled = true; btn.innerText = "Sending...";
+            const res = await requestResendEmail(activeSubmissionId);
+            if(res.status === 'success') alert("Email Sent Successfully!");
+            else alert("Failed to send email: " + (res.message || "Error"));
+            btn.disabled = false; btn.innerText = "Resend to Email";
+        }
+
         function showPage(id) { document.querySelectorAll('.page-section').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+        function goToHistory() { showPage('historyPage'); }
+        function backToHistoryList() { showPage('historyPage'); }
         function groupQuestions(qs) { let g = {}; qs.forEach(q => { if(!g[q.category]) g[q.category] = []; g[q.category].push(q); }); return g; }
+
+        async function checkHistory() {
+            const email = document.getElementById('historyEmailInput').value;
+            const phone = document.getElementById('historyPhoneInput').value;
+            if(!email || !phone) { alert("Enter Email and Phone."); return; }
+            document.getElementById('historyList').innerHTML = "Searching...";
+            const res = await fetchUserHistory(email, phone);
+            
+            if(res.status === 'success' && res.data.length > 0) {
+                let html = "";
+                res.data.forEach(item => {
+                    const d = new Date(item.timestamp).toLocaleString('en-GB');
+                    const itemStr = encodeURIComponent(JSON.stringify(item));
+                    html += `<div class="history-item"><div><strong>Review by: ${item.assessor || 'Anonymous'}</strong><br><small>${d}</small></div><button class="btn btn-outline" style="margin:0; width:auto; padding:5px 15px;" onclick="loadDetail('${item.id}', '${itemStr}')">View</button></div>`;
+                });
+                document.getElementById('historyList').innerHTML = html;
+            } else { document.getElementById('historyList').innerHTML = "No assessments found for you."; }
+        }
+
+        async function loadDetail(id, str) {
+            const data = JSON.parse(decodeURIComponent(str));
+            activeSubmissionId = id;
+            document.getElementById('detName').innerText = data.name;
+            document.getElementById('detEmail').innerText = document.getElementById('historyEmailInput').value; 
+            document.getElementById('detAssessor').innerText = "Peer Reviewer"; 
+            document.getElementById('detDate').innerText = new Date(data.timestamp).toLocaleDateString();
+            document.getElementById('detTotalScore').innerText = data.totalScore;
+            let chartHtml = "";
+            categoryOrder.forEach((cat, i) => {
+                const s = data.habitScores[i];
+                let color = s >= 80 ? "#27ae60" : (s >= 60 ? "#f39c12" : "#e74c3c");
+                chartHtml += `<div class="result-row"><div class="result-label">${cat}</div><div class="result-bar-area"><div class="result-bar-fill" style="width: ${s}%; background-color: ${color}"></div></div><div class="result-score" style="color:${color}">${s}</div></div>`;
+            });
+            document.getElementById('detailChartArea').innerHTML = chartHtml;
+            const res = await fetchSubmissionDetails(id);
+            if(res.status==='success') { renderDetailQuestions(res.data); }
+            showPage('historyDetailPage');
+        }
+
+        function renderDetailQuestions(details) {
+            const ansMap = {}; details.forEach(d => ansMap[d.q_id] = d.score);
+            let grouped = {}; fetchedQuestions.forEach(q => { if(!grouped[q.category]) grouped[q.category]=[]; grouped[q.category].push(q); });
+            let html = ""; let idx = 1;
+            categoryOrder.forEach(cat => {
+                if(grouped[cat]) {
+                    html += `<div class="section-header"><span>${cat}</span></div>`;
+                    grouped[cat].forEach(q => {
+                        const userScore = ansMap[q.id] !== undefined ? ansMap[q.id] : null;
+                        html += `<div class="question-item" style="background-color:#fcfcfc;"><div class="question-text">${idx}. ${q.text}</div><div class="scale-line-wrapper"><div class="scale-label-side scale-label-left">Sangat Tidak Setuju</div><div class="scale-options"><div class="scale-track"></div>${[0, 25, 50, 75, 100].map(v => {
+                            let rawValue = userScore; if(userScore !== null && q.reversed === true) rawValue = 100 - userScore;
+                            const isChecked = (rawValue === v) ? 'checked' : ''; const opacity = isChecked ? '1' : '0.4';
+                            return `<label class="scale-option" style="cursor: default;"><input type="radio" disabled ${isChecked} style="cursor: default; opacity: ${opacity}; accent-color: var(--primary);"></label>`;
+                        }).join('')}</div><div class="scale-label-side scale-label-right">Sangat Setuju</div></div></div>`;
+                        idx++;
+                    });
+                }
+            });
+            document.getElementById('detailContainer').innerHTML = html;
+        }
     </script>
 </body>
 </html>
