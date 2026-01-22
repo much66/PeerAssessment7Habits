@@ -142,7 +142,6 @@
         .profile-right { text-align: right; }
         .date-badge { background: #fff; border: 1px solid #ccc; padding: 5px 10px; border-radius: 6px; font-size: 0.85rem; color: #555; white-space: nowrap; display: inline-block; }
 
-        /* RESULT & CHART STYLING */
         .result-row { display: flex; align-items: center; margin-bottom: 15px; background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 12px; padding: 20px; }
         .result-label { flex: 0 0 40%; font-weight: 500; padding-right: 15px; }
         .result-bar-area { flex: 1; background: #e0e0e0; height: 12px; border-radius: 6px; overflow: hidden; }
@@ -195,7 +194,7 @@
             h1 { font-size: 1.15rem; }
         }
         @media print {
-             header, footer, .btn, .btn-outline, #introPage, #historyPage, #surveyPage, .summary-link-box { display: none !important; }
+             header, footer, .btn, .btn-outline, #introPage, #historyPage, #surveyPage, .summary-link-box, .btn-ai, .ai-box { display: none !important; }
              #historyDetailPage, #resultPage { display: block !important; width: 100%; }
         }
     </style>
@@ -220,10 +219,8 @@
                 
                 <div class="form-group">
                     <label>Your Name (Assessor)</label>
-                    <!-- CUSTOM SEARCHABLE DROPDOWN (ASSESSOR) -->
                     <input type="text" id="assessorName" placeholder="Type to search your name..." autocomplete="off" oninput="filterAssessorList()" onfocus="filterAssessorList()">
                     <div id="assessorDropdown" class="custom-dropdown-list"></div>
-                    
                     <input type="hidden" id="assessorEmail">
                     <input type="hidden" id="assessorTeam">
                 </div>
@@ -232,11 +229,8 @@
 
                 <div class="form-group">
                     <label>Target Name (Person to Assess)</label>
-                    <!-- CUSTOM SEARCHABLE DROPDOWN (TARGET) -->
                     <input type="text" id="targetSearchInput" placeholder="Select your name above first..." autocomplete="off" oninput="filterTargetList()" onfocus="filterTargetList()" disabled>
                     <div id="targetDropdown" class="custom-dropdown-list"></div>
-
-                    <!-- HIDDEN VALUES -->
                     <input type="hidden" id="targetName">
                     <input type="hidden" id="targetEmail">
                     <input type="hidden" id="targetPhone">
@@ -246,7 +240,9 @@
                 <div id="loadingMsg" style="text-align:center; color: #0f2c59; display:none; margin-top:20px;">Loading Data...</div>
 
                 <button class="btn" id="startBtn" onclick="initSurvey()" disabled>Start Assessment</button>
-                <!-- BUTTON CHECK FEEDBACK REMOVED -->
+                
+                <!-- CHECK HISTORY REMOVED FROM INTRO PAGE -->
+                
             </div>
         </div>
 
@@ -259,7 +255,7 @@
             </div>
         </div>
 
-        <!-- 3. RESULT (UPDATED: CHART & DOWNLOAD BUTTON) -->
+        <!-- 3. RESULT -->
         <div id="resultPage" class="page-section">
             <div class="card">
                 <h2 style="text-align:center; color:#0f2c59; font-weight:700;">Submission Successful</h2>
@@ -269,7 +265,7 @@
                     <p style="color:#27ae60; font-weight:600;">A PDF report has been emailed to the target.</p>
                 </div>
 
-                <!-- SCORE DETAILS (BAR CHARTS RESTORED) -->
+                <!-- SUMMARY CHART (BAR CHART KEMBALI MUNCUL) -->
                 <div id="scoreDetails"></div>
 
                 <div class="final-score-box">
@@ -285,18 +281,20 @@
             </div>
         </div>
 
-        <!-- 4. HISTORY CHECK (ACCESS REMOVED FROM HOME, BUT CODE KEPT) -->
+        <!-- 4. HISTORY (ACCESS VIA CODE OR ADMIN ONLY IF BUTTON REMOVED) -->
         <div id="historyPage" class="page-section">
-             <!-- ... content hidden/inaccessible ... -->
+             <!-- ... content hidden ... -->
         </div>
 
         <!-- 5. HISTORY DETAIL -->
-        <!-- ... content ... -->
+        <div id="historyDetailPage" class="page-section">
+             <!-- ... content hidden ... -->
+        </div>
+
     </div>
 
     <script src="api_handler.js"></script>
     <script>
-        const apiKey = ""; 
         const categoryOrder = [
             "Habit 1: Be Proactive", "Habit 2: Begin with the End in Mind", "Habit 3: Put First Things First",
             "Emotional Bank Account", "Habit 4: Think Win-Win", "Habit 5: Seek First to Understand Then to Be Understood",
@@ -311,26 +309,21 @@
         let selectedTarget = null;
         let eligibleTargets = [];
 
-        // --- INIT ---
         window.onload = async function() {
             document.getElementById('loadingMsg').style.display = 'block';
-            
             const [questions, employees, submitted] = await Promise.all([
                 fetchQuestionsFromSheet(),
                 fetchEmployees(),
                 fetchSubmittedPairs()
             ]);
-
             fetchedQuestions = questions;
             employeesData = employees;
             submittedPairs = submitted;
-
             if (employeesData.length > 0 && fetchedQuestions.length > 0) {
                 document.getElementById('startBtn').innerText = "Start Assessment";
                 document.getElementById('startBtn').disabled = false;
                 document.getElementById('loadingMsg').style.display = 'none';
                 
-                // Click Outside Listener for Dropdowns
                 document.addEventListener('click', function(e) {
                     if (!e.target.closest('#assessorName')) {
                         document.getElementById('assessorDropdown').style.display = 'none';
@@ -344,7 +337,6 @@
             } else { alert("Failed to load system data. Please refresh."); }
         };
 
-        // --- CUSTOM DROPDOWN LOGIC (SAMA SEPERTI SEBELUMNYA) ---
         function filterAssessorList() {
             const input = document.getElementById('assessorName');
             const dropdown = document.getElementById('assessorDropdown');
@@ -382,7 +374,6 @@
             }
         }
 
-        // --- TARGET DROPDOWN LOGIC ---
         function prepareTargetData(assessorEmp) {
             const targetInput = document.getElementById('targetSearchInput');
             const assessedEmails = submittedPairs.filter(p => p.assessor === assessorEmp.email).map(p => p.target);
