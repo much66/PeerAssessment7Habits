@@ -5,7 +5,7 @@
  */
 
 // GANTI URL DI BAWAH INI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzDT1JtB9ec3y2qGXOL6q9Xxq8gbkmBj4spzVxPB8RSRy8DZxzZaUigMPqEEXIWDJN55g/exec'; 
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyol6UoAyLAZXKkwf49hEufE9OANR4RcuOYy9Jnml0bCWiTITfs3CkV_TM4LrYhXLFB/exec'; 
 
 /**
  * 1. MENGAMBIL DATA KARYAWAN (Untuk Dropdown Assessor & Target)
