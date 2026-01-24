@@ -69,9 +69,11 @@
         .question-item { background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 12px; padding: 25px; margin-bottom: 20px; }
         .question-text { font-size: 1.05rem; margin-bottom: 20px; text-align: justify; font-weight: 500; color: #2c3e50; }
         
+        /* SKALA LIKERT - DESKTOP DEFAULT */
         .scale-line-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 10px; }
         .scale-label-side { font-size: 0.8rem; font-weight: 600; flex: 0 0 75px; text-align: center; line-height: 1.2; }
         .scale-label-left { color: #e74c3c; } .scale-label-right { color: #27ae60; }
+        
         .scale-options { flex-grow: 1; display: flex; justify-content: space-between; position: relative; padding: 0 5px; align-items: center; height: 36px; }
         .scale-track { position: absolute; top: 50%; left: 5px; right: 5px; height: 3px; background: #d1d5db; z-index: 1; transform: translateY(-50%); border-radius: 2px; }
         .scale-option { display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; z-index: 2; margin: 0; width: 24px; }
@@ -86,14 +88,77 @@
 
         .final-score-box { background: linear-gradient(135deg, var(--primary), #1a4a8d); color: white; padding: 15px 25px; border-radius: 12px; text-align: center; margin-top: 30px; }
         
+        /* --- MOBILE OPTIMIZATION --- */
         @media screen and (max-width: 768px) {
-            .container { padding: 15px; }
-            .card { padding: 20px 15px; }
-            .scale-label-side { font-size: 0.7rem; flex: 0 0 60px; }
+            /* 1. Container & Padding yang Lebih Efisien */
+            .container { padding: 10px 10px; margin: 0 auto; } 
+            .card { 
+                padding: 20px 15px; 
+                margin-bottom: 15px; 
+                border-radius: 10px;
+            }
             
-            .result-row { flex-wrap: wrap; gap: 5px; padding: 15px; }
-            .result-label { flex: 0 0 100%; width: 100%; margin-bottom: 5px; font-size: 0.9rem; }
-            .result-score { margin-left: 10px; font-size: 1rem; }
+            /* 2. Ukuran Font Header */
+            h1 { font-size: 1.3rem; margin-bottom: 5px; line-height: 1.3; }
+            .logo-text { font-size: 0.95rem; }
+            p { font-size: 0.9rem; }
+            
+            /* 3. Input & Form agar tidak terlalu besar tapi pas disentuh */
+            .form-group { margin-bottom: 15px; }
+            .form-group label { font-size: 0.9rem; margin-bottom: 4px; }
+            .form-group input, .form-group select { 
+                padding: 10px; 
+                font-size: 16px; /* Mencegah zoom di iOS */
+                height: auto;
+            }
+
+            /* 4. Pertanyaan */
+            .question-item { padding: 15px; margin-bottom: 15px; border-radius: 8px; }
+            .question-text { 
+                font-size: 0.95rem; /* Sedikit dikecilkan agar muat */
+                line-height: 1.5; 
+                margin-bottom: 15px; 
+                text-align: left; 
+            }
+
+            /* 5. SKALA LIKERT - MODIFIKASI MOBILE (TETAP MENYAMPING) */
+            .scale-line-wrapper {
+                gap: 5px; /* Jarak antar elemen diperkecil */
+                align-items: center; /* Pastikan vertikal center */
+            }
+
+            /* Kecilkan label teks agar area tombol di tengah lebih lega */
+            .scale-label-side { 
+                flex: 0 0 50px; /* Lebar label fix lebih kecil */
+                font-size: 0.7rem; /* Font lebih kecil */
+                line-height: 1.1; 
+                word-wrap: break-word; /* Bungkus kata jika kepanjangan */
+            }
+            .scale-label-left { text-align: center; } /* Rata tengah di kolomnya sendiri */
+            .scale-label-right { text-align: center; }
+
+            /* Area Tombol Pilihan Ganda */
+            .scale-options { 
+                flex-grow: 1; /* Ambil sisa ruang sebanyak mungkin */
+                padding: 0 2px;
+            }
+            
+            /* Tombol Radio */
+            .scale-option { 
+                width: auto; /* Biarkan flex mengatur */
+                flex: 1; /* Distribusi rata */
+            }
+            .scale-option input { 
+                width: 20px; height: 20px; /* Ukuran tombol pas untuk jari */
+            }
+
+            /* 6. Result Page */
+            .result-row { flex-wrap: wrap; gap: 5px; padding: 12px; }
+            .result-label { flex: 0 0 100%; width: 100%; margin-bottom: 5px; font-size: 0.9rem; padding-right: 0; }
+            .result-bar-area { flex: 1; height: 10px; }
+            .result-score { flex: 0 0 40px; margin-left: 10px; font-size: 1rem; text-align: right; }
+            
+            .btn, .btn-outline { font-size: 1rem; padding: 12px; }
         }
     </style>
 </head>
@@ -101,7 +166,6 @@
 
     <header>
         <div class="logo-container">
-            <img src="Logo_WE.jpg" alt="Logo" onerror="this.style.display='none'">
             <div class="logo-text">Worldwhite Enterprise</div>
         </div>
     </header>
