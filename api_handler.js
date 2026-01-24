@@ -1,6 +1,5 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlgNflDHc18eme2AnohZ-e9F-YzejMPQ7K3Jor5uV3L5sngEP2TJEC_b8UNdPL_iLY/exec'; 
 
-// --- FETCH SUBMITTED PAIRS (DUPLICATE CHECK) ---
 async function fetchSubmittedPairs() {
     if (!SCRIPT_URL || SCRIPT_URL.includes('/dev')) return [];
     try {
