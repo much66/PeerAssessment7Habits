@@ -21,10 +21,12 @@
             line-height: 1.6; 
             min-height: 100vh; 
             display: flex; flex-direction: column; 
+            -webkit-font-smoothing: antialiased; 
         }
         
         header { background: #fff; padding: 15px 0; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .logo-container { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .logo-img { height: 40px; width: auto; object-fit: contain; }
         .logo-text { font-size: 1.1rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
 
         .container { max-width: 800px; margin: 0 auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
@@ -63,14 +65,22 @@
         .section-divider span { padding: 0; color: #999; font-size: 0.8rem; font-weight: 600; white-space: nowrap; background: transparent; text-align: center; }
         .section-divider::before, .section-divider::after { content: ""; flex: 1; border-top: 2px dashed #eee; height: 1px; min-width: 20px; }
         
-        .section-header { background: var(--secondary); color: var(--primary); padding: 15px 20px; border-radius: 8px; font-weight: 700; font-size: 1.1rem; margin: 30px 0 20px 0; display: flex; align-items: center; flex-direction: row; }
+        .section-header { 
+            background: var(--secondary); 
+            color: var(--primary); 
+            padding: 15px 20px; 
+            border-radius: 8px; 
+            font-weight: 700; 
+            font-size: 1.1rem; 
+            margin: 30px 0 20px 0; 
+            display: flex; align-items: center; flex-direction: row; 
+        }
         .section-header::before { content: ''; display: block; width: 6px; height: 24px; background-color: var(--primary); border-radius: 4px; margin-right: 15px; flex-shrink: 0; }
 
         .question-item { background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 12px; padding: 25px; margin-bottom: 20px; }
-        /* DEFAULT DESKTOP JUSTIFY */
         .question-text { font-size: 1.05rem; margin-bottom: 20px; text-align: justify; font-weight: 500; color: #2c3e50; }
         
-        /* SKALA LIKERT - DESKTOP DEFAULT */
+        /* SKALA LIKERT - DESKTOP */
         .scale-line-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 10px; }
         .scale-label-side { font-size: 0.8rem; font-weight: 600; flex: 0 0 75px; text-align: center; line-height: 1.2; }
         .scale-label-left { color: #e74c3c; } .scale-label-right { color: #27ae60; }
@@ -91,69 +101,31 @@
         
         /* --- MOBILE OPTIMIZATION --- */
         @media screen and (max-width: 768px) {
-            /* 1. Container & Padding yang Lebih Efisien */
             .container { padding: 10px 10px; margin: 0 auto; } 
-            .card { 
-                padding: 20px 15px; 
-                margin-bottom: 15px; 
-                border-radius: 10px;
-            }
+            .card { padding: 20px 15px; margin-bottom: 15px; border-radius: 10px; }
             
-            /* 2. Ukuran Font Header */
             h1 { font-size: 1.3rem; margin-bottom: 5px; line-height: 1.3; }
             .logo-text { font-size: 0.95rem; }
             p { font-size: 0.9rem; }
             
-            /* 3. Input & Form agar tidak terlalu besar tapi pas disentuh */
+            /* Smaller Habits Header on Mobile */
+            .section-header { font-size: 0.85rem; padding: 10px 15px; } 
+
             .form-group { margin-bottom: 15px; }
             .form-group label { font-size: 0.9rem; margin-bottom: 4px; }
-            .form-group input, .form-group select { 
-                padding: 10px; 
-                font-size: 16px; /* Mencegah zoom di iOS */
-                height: auto;
-            }
+            .form-group input, .form-group select { padding: 10px; font-size: 16px; height: auto; }
 
-            /* 4. Pertanyaan (UPDATED) */
             .question-item { padding: 15px; margin-bottom: 15px; border-radius: 8px; }
-            .question-text { 
-                font-size: 0.85rem; /* DIPERKECIL LAGI */
-                line-height: 1.5; 
-                margin-bottom: 15px; 
-                text-align: justify; /* JADI JUSTIFY */
-            }
+            .question-text { font-size: 0.85rem; line-height: 1.5; margin-bottom: 15px; text-align: justify; }
 
-            /* 5. SKALA LIKERT - MODIFIKASI MOBILE (TETAP MENYAMPING) */
-            .scale-line-wrapper {
-                gap: 5px; /* Jarak antar elemen diperkecil */
-                align-items: center; /* Pastikan vertikal center */
-            }
-
-            /* Kecilkan label teks agar area tombol di tengah lebih lega */
-            .scale-label-side { 
-                flex: 0 0 50px; /* Lebar label fix lebih kecil */
-                font-size: 0.6rem; /* DIPERKECIL LAGI */
-                line-height: 1.1; 
-                word-wrap: break-word; /* Bungkus kata jika kepanjangan */
-            }
-            .scale-label-left { text-align: center; } /* Rata tengah di kolomnya sendiri */
+            .scale-line-wrapper { gap: 5px; align-items: center; }
+            .scale-label-side { flex: 0 0 50px; font-size: 0.6rem; line-height: 1.1; word-wrap: break-word; }
+            .scale-label-left { text-align: center; }
             .scale-label-right { text-align: center; }
+            .scale-options { flex-grow: 1; padding: 0 2px; }
+            .scale-option { width: auto; flex: 1; }
+            .scale-option input { width: 20px; height: 20px; }
 
-            /* Area Tombol Pilihan Ganda */
-            .scale-options { 
-                flex-grow: 1; /* Ambil sisa ruang sebanyak mungkin */
-                padding: 0 2px;
-            }
-            
-            /* Tombol Radio */
-            .scale-option { 
-                width: auto; /* Biarkan flex mengatur */
-                flex: 1; /* Distribusi rata */
-            }
-            .scale-option input { 
-                width: 20px; height: 20px; /* Ukuran tombol pas untuk jari */
-            }
-
-            /* 6. Result Page */
             .result-row { flex-wrap: wrap; gap: 5px; padding: 12px; }
             .result-label { flex: 0 0 100%; width: 100%; margin-bottom: 5px; font-size: 0.9rem; padding-right: 0; }
             .result-bar-area { flex: 1; height: 10px; }
@@ -167,6 +139,8 @@
 
     <header>
         <div class="logo-container">
+            <!-- LOGO ADDED -->
+            <img src="Logo_WE.jpg" alt="Logo" class="logo-img" onerror="this.style.display='none'">
             <div class="logo-text">Worldwhite Enterprise</div>
         </div>
     </header>
@@ -182,7 +156,6 @@
                 
                 <div class="form-group">
                     <label>Select Your Group</label>
-                    <!-- SEARCHABLE GROUP INPUT -->
                     <input type="text" id="groupSearchInput" placeholder="Type to search your Group..." autocomplete="off" oninput="filterGroupList()" onfocus="filterGroupList()">
                     <div id="groupDropdown" class="custom-dropdown-list"></div>
                 </div>
@@ -191,11 +164,9 @@
 
                 <div class="form-group">
                     <label>Target Name (Anggota Group)</label>
-                    <!-- SEARCHABLE TARGET INPUT -->
                     <input type="text" id="targetSearchInput" placeholder="Select Group first..." autocomplete="off" oninput="filterTargetList()" onfocus="filterTargetList()" disabled>
                     <div id="targetDropdown" class="custom-dropdown-list"></div>
 
-                    <!-- Hidden Fields for Submission -->
                     <input type="hidden" id="targetName">
                     <input type="hidden" id="targetEmail">
                     <input type="hidden" id="targetPhone">
@@ -205,9 +176,7 @@
                 <div id="loadingMsg" style="text-align:center; color: #0f2c59; display:none; margin-top:20px;">Loading Data form Spreadsheet...</div>
 
                 <button class="btn" id="startBtn" onclick="initSurvey()" disabled>Start Assessment</button>
-                <div style="text-align:center; margin-top:10px;">
-                    <button class="btn-outline" style="border:none; font-size:0.9rem;" onclick="resetSession()">Reset Session History</button>
-                </div>
+                <!-- Tombol Reset Session History DIHAPUS sesuai permintaan -->
             </div>
         </div>
 
@@ -220,6 +189,12 @@
                     <strong>Target:</strong> <span id="displayTarget"></span>
                 </p>
             </div>
+            
+            <!-- CANCEL BUTTON ADDED -->
+            <button class="btn-outline" style="border: 1px solid #e74c3c; color: #e74c3c; margin-bottom: 20px;" onclick="cancelAssessment()">
+                &larr; Cancel / Kembali
+            </button>
+
             <div id="questionsContainer"></div>
             <div class="card">
                 <button class="btn btn-submit-final" onclick="calculateAndSubmit()">Submit Assessment</button>
@@ -236,7 +211,6 @@
                     <p>Penilaian untuk <strong id="resTargetName"></strong> berhasil disimpan.</p>
                 </div>
 
-                <!-- SUMMARY CHART -->
                 <div class="section-divider"><span>SUMMARY SCORE</span></div>
                 <div id="resultSummaryChart" style="margin-bottom: 30px;"></div>
 
@@ -245,7 +219,6 @@
                     <div id="finalScoreDisplay" style="font-size:3rem; font-weight:700;">0</div>
                 </div>
                 
-                <!-- DETAIL ANSWERS (DISABLED) -->
                 <div class="section-divider" style="margin-top: 40px;"><span>DETAIL JAWABAN ANDA</span></div>
                 <div id="resultDetailAnswers"></div>
 
@@ -267,31 +240,32 @@
         let employeesData = []; 
         let fetchedQuestions = [];
         let uniqueGroups = [];
+        let submittedPairs = []; // Stores who has assessed whom
+        
         let selectedGroup = "";
         let selectedTarget = null;
         let eligibleTargets = [];
-        let completedTargets = []; // Session history
 
         // --- INIT ---
         window.onload = async function() {
             document.getElementById('loadingMsg').style.display = 'block';
             
-            // LOAD REAL DATA VIA API_HANDLER
-            const [questions, employees] = await Promise.all([
+            // LOAD REAL DATA & SUBMISSION HISTORY
+            const [questions, employees, submitted] = await Promise.all([
                 fetchQuestionsFromSheet(),
-                fetchEmployees()
+                fetchEmployees(),
+                fetchSubmittedPairs()
             ]);
 
             fetchedQuestions = questions;
             employeesData = employees;
+            submittedPairs = submitted || [];
 
             if (employeesData.length > 0 && fetchedQuestions.length > 0) {
-                // Extract unique teams (Groups) from spreadsheet data
                 uniqueGroups = [...new Set(employeesData.map(e => e.team))].sort();
                 
                 document.getElementById('loadingMsg').style.display = 'none';
                 
-                // Click Outside Listener
                 document.addEventListener('click', function(e) {
                     if (!e.target.closest('#groupSearchInput')) {
                         document.getElementById('groupDropdown').style.display = 'none';
@@ -356,18 +330,31 @@
             }
         }
 
-        // --- TARGET SEARCHABLE DROPDOWN ---
+        // --- TARGET SEARCHABLE DROPDOWN (FILTER LOGIC) ---
         function updateEligibleTargets() {
-            // Filter: Same Group AND Not in Completed List
+            // Logic: 
+            // 1. Target must be in same group
+            // 2. Target must NOT have been assessed by anyone (or specifically this group, depending on interpretation)
+            //    Since "Assessor" column in spreadsheet stores Group Name, checking submittedPairs handles this correctly.
+            
+            // Get list of emails that have been assessed by THIS Group
+            // Note: submittedPairs format = { assessor: 'group 1', target: 'email@...' }
+            const alreadyAssessedEmails = submittedPairs
+                .filter(p => p.assessor === selectedGroup.toLowerCase())
+                .map(p => p.target);
+
             eligibleTargets = employeesData.filter(e => 
                 e.team === selectedGroup && 
-                !completedTargets.includes(e.id)
+                !alreadyAssessedEmails.includes(e.email)
             );
             
             const targetInput = document.getElementById('targetSearchInput');
             if (eligibleTargets.length === 0) {
                 targetInput.disabled = true;
-                targetInput.placeholder = "No targets left in this group";
+                targetInput.placeholder = "All members in this group have been assessed.";
+            } else {
+                targetInput.placeholder = "Type to search member...";
+                targetInput.disabled = false;
             }
         }
 
@@ -397,7 +384,6 @@
             document.getElementById('targetDropdown').style.display = 'none';
             selectedTarget = emp;
             
-            // Set Hidden Data
             document.getElementById('targetName').value = emp.name;
             document.getElementById('targetEmail').value = emp.email;
             document.getElementById('targetPhone').value = emp.phone;
@@ -429,6 +415,12 @@
             renderSurvey(fetchedQuestions);
             showPage('surveyPage');
             window.scrollTo(0,0);
+        }
+
+        function cancelAssessment() {
+            // Cancel and go back to intro
+            showPage('introPage');
+            // We keep the selection so user doesn't have to re-select if it was just a misclick
         }
 
         function renderSurvey(questions) {
@@ -487,7 +479,6 @@
             });
             let grandTotal = Math.round(total / categoryOrder.length);
 
-            // Construct Payload with Group as Assessor
             const payload = {
                 assessor: { 
                     name: selectedGroup, 
@@ -503,9 +494,7 @@
                 answers: detailAnswers
             };
 
-            // --- RENDER RESULT SUMMARY & DETAILS (NEW) ---
-            
-            // 1. Render Summary Chart
+            // RENDER CHART
             let chartHtml = "";
             categoryOrder.forEach((cat, i) => {
                 const s = habitScores[i];
@@ -521,7 +510,7 @@
             });
             document.getElementById('resultSummaryChart').innerHTML = chartHtml;
 
-            // 2. Render Detail Answers (Read-only)
+            // RENDER DETAIL
             const ansMap = {}; detailAnswers.forEach(d => ansMap[d.q_id] = d.score);
             let grouped = {}; fetchedQuestions.forEach(q => { if(!grouped[q.category]) grouped[q.category]=[]; grouped[q.category].push(q); });
             
@@ -539,16 +528,12 @@
                                 <div class="scale-options">
                                     <div class="scale-track"></div>
                                     ${[0, 25, 50, 75, 100].map(v => {
-                                        // Reverse Logic for Display:
-                                        // If stored score is 100 (Sangat Positif), but question was reversed, it means user clicked 0.
                                         let rawValue = userScore;
                                         if (userScore !== undefined && q.reversed === true) {
                                             rawValue = 100 - userScore;
                                         }
-                                        
                                         const isChecked = (rawValue === v) ? 'checked' : '';
                                         const opacity = isChecked ? '1' : '0.3';
-                                        
                                         return `<label class="scale-option" style="cursor: default;">
                                             <input type="radio" disabled ${isChecked} style="cursor: default; opacity: ${opacity}; accent-color: var(--primary);">
                                         </label>`;
@@ -563,12 +548,15 @@
             });
             document.getElementById('resultDetailAnswers').innerHTML = detailHtml;
 
-            // --- END NEW RENDER LOGIC ---
-
             const res = await saveToGoogleSheet(payload);
             
             if (res.status === 'success') {
-                if(selectedTarget) completedTargets.push(selectedTarget.id); 
+                // UPDATE LOCAL STATE SO THEY DON'T APPEAR AGAIN
+                submittedPairs.push({ 
+                    assessor: selectedGroup.toLowerCase(), 
+                    target: payload.target.email 
+                });
+
                 document.getElementById('resTargetName').innerText = payload.target.name;
                 document.getElementById('finalScoreDisplay').innerText = grandTotal;
                 showPage('resultPage');
@@ -579,19 +567,12 @@
 
         function continueAssessment() {
             showPage('introPage');
-            updateEligibleTargets();
+            updateEligibleTargets(); // Refresh list to remove the one just submitted
             
             const targetInput = document.getElementById('targetSearchInput');
             targetInput.value = "";
             selectedTarget = null;
             document.getElementById('startBtn').disabled = true;
-        }
-
-        function resetSession() {
-            if(confirm("Start over? All assessed targets will reappear in the list.")) {
-                completedTargets = [];
-                location.reload();
-            }
         }
         
         function showPage(id) { document.querySelectorAll('.page-section').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
