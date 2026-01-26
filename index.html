@@ -139,7 +139,6 @@
 
     <header>
         <div class="logo-container">
-            <!-- LOGO ADDED -->
             <img src="Logo_WE.jpg" alt="Logo" class="logo-img" onerror="this.style.display='none'">
             <div class="logo-text">Worldwhite Enterprise</div>
         </div>
@@ -151,7 +150,7 @@
         <div id="introPage" class="page-section active">
             <div class="card">
                 <h1 style="color:#0f2c59; text-align:center; font-weight:700;">Peer Assessment</h1>
-                <p style="text-align:center; color:#666; font-weight:400;">Based on 7 Habits by Stephen Covey</p>
+                <p style="text-align:center; color:#666; font-weight:400;">Based on 7 Habits</p>
                 <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
                 
                 <div class="form-group">
@@ -176,21 +175,19 @@
                 <div id="loadingMsg" style="text-align:center; color: #0f2c59; display:none; margin-top:20px;">Loading Data form Spreadsheet...</div>
 
                 <button class="btn" id="startBtn" onclick="initSurvey()" disabled>Start Assessment</button>
-                <!-- Tombol Reset Session History DIHAPUS sesuai permintaan -->
             </div>
         </div>
 
         <!-- 2. SURVEY -->
         <div id="surveyPage" class="page-section">
             <div class="card" style="padding: 20px; background: #e8f5e9; border: 1px solid #c8e6c9;">
-                <h3 style="margin:0 0 10px 0; color: #2e7d32;">Assessment in Progress</h3>
+                <h3 style="margin:0 0 10px 0; color: #2e7d32;">Based on 7 Habits</h3>
                 <p style="margin:0; font-size:0.9rem;">
                     <strong>Assessing Group:</strong> <span id="displayGroup"></span><br>
                     <strong>Target:</strong> <span id="displayTarget"></span>
                 </p>
             </div>
             
-            <!-- CANCEL BUTTON ADDED -->
             <button class="btn-outline" style="border: 1px solid #e74c3c; color: #e74c3c; margin-bottom: 20px;" onclick="cancelAssessment()">
                 &larr; Cancel / Kembali
             </button>
@@ -220,7 +217,14 @@
                 </div>
                 
                 <div class="section-divider" style="margin-top: 40px;"><span>DETAIL JAWABAN ANDA</span></div>
-                <div id="resultDetailAnswers"></div>
+                
+                <!-- TOGGLE BUTTON -->
+                <button id="btnToggleDetail" class="btn-outline" style="margin-bottom: 20px; font-size: 0.9rem; padding: 12px;" onclick="toggleDetails()">
+                    Lihat Detail Jawaban &#9660;
+                </button>
+                
+                <!-- HIDDEN CONTAINER -->
+                <div id="resultDetailAnswers" style="display: none;"></div>
 
                 <button class="btn" style="margin-top: 30px;" onclick="continueAssessment()">Assess Next Member</button>
                 <button class="btn btn-outline" onclick="location.reload()">Back to Home</button>
@@ -240,7 +244,7 @@
         let employeesData = []; 
         let fetchedQuestions = [];
         let uniqueGroups = [];
-        let submittedPairs = []; // Stores who has assessed whom
+        let submittedPairs = []; 
         
         let selectedGroup = "";
         let selectedTarget = null;
@@ -250,7 +254,6 @@
         window.onload = async function() {
             document.getElementById('loadingMsg').style.display = 'block';
             
-            // LOAD REAL DATA & SUBMISSION HISTORY
             const [questions, employees, submitted] = await Promise.all([
                 fetchQuestionsFromSheet(),
                 fetchEmployees(),
@@ -306,7 +309,6 @@
             document.getElementById('groupDropdown').style.display = 'none';
             selectedGroup = groupName;
             
-            // Reset Target Selection
             const targetInput = document.getElementById('targetSearchInput');
             targetInput.value = "";
             targetInput.disabled = false;
@@ -332,13 +334,6 @@
 
         // --- TARGET SEARCHABLE DROPDOWN (FILTER LOGIC) ---
         function updateEligibleTargets() {
-            // Logic: 
-            // 1. Target must be in same group
-            // 2. Target must NOT have been assessed by anyone (or specifically this group, depending on interpretation)
-            //    Since "Assessor" column in spreadsheet stores Group Name, checking submittedPairs handles this correctly.
-            
-            // Get list of emails that have been assessed by THIS Group
-            // Note: submittedPairs format = { assessor: 'group 1', target: 'email@...' }
             const alreadyAssessedEmails = submittedPairs
                 .filter(p => p.assessor === selectedGroup.toLowerCase())
                 .map(p => p.target);
@@ -418,9 +413,7 @@
         }
 
         function cancelAssessment() {
-            // Cancel and go back to intro
             showPage('introPage');
-            // We keep the selection so user doesn't have to re-select if it was just a misclick
         }
 
         function renderSurvey(questions) {
@@ -454,6 +447,20 @@
                 }
             });
             container.innerHTML = html;
+        }
+
+        // --- NEW: TOGGLE DETAILS FUNCTION ---
+        function toggleDetails() {
+            const container = document.getElementById('resultDetailAnswers');
+            const btn = document.getElementById('btnToggleDetail');
+            
+            if (container.style.display === "none") {
+                container.style.display = "block";
+                btn.innerHTML = "Tutup Detail Jawaban &#9650;"; // Up Arrow
+            } else {
+                container.style.display = "none";
+                btn.innerHTML = "Lihat Detail Jawaban &#9660;"; // Down Arrow
+            }
         }
 
         async function calculateAndSubmit() {
@@ -494,7 +501,6 @@
                 answers: detailAnswers
             };
 
-            // RENDER CHART
             let chartHtml = "";
             categoryOrder.forEach((cat, i) => {
                 const s = habitScores[i];
@@ -510,7 +516,6 @@
             });
             document.getElementById('resultSummaryChart').innerHTML = chartHtml;
 
-            // RENDER DETAIL
             const ansMap = {}; detailAnswers.forEach(d => ansMap[d.q_id] = d.score);
             let grouped = {}; fetchedQuestions.forEach(q => { if(!grouped[q.category]) grouped[q.category]=[]; grouped[q.category].push(q); });
             
@@ -548,10 +553,13 @@
             });
             document.getElementById('resultDetailAnswers').innerHTML = detailHtml;
 
+            // RESET TOGGLE STATE
+            document.getElementById('resultDetailAnswers').style.display = "none";
+            document.getElementById('btnToggleDetail').innerHTML = "Lihat Detail Jawaban &#9660;";
+
             const res = await saveToGoogleSheet(payload);
             
             if (res.status === 'success') {
-                // UPDATE LOCAL STATE SO THEY DON'T APPEAR AGAIN
                 submittedPairs.push({ 
                     assessor: selectedGroup.toLowerCase(), 
                     target: payload.target.email 
@@ -567,7 +575,7 @@
 
         function continueAssessment() {
             showPage('introPage');
-            updateEligibleTargets(); // Refresh list to remove the one just submitted
+            updateEligibleTargets(); 
             
             const targetInput = document.getElementById('targetSearchInput');
             targetInput.value = "";
