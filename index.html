@@ -150,7 +150,7 @@
         <div id="introPage" class="page-section active">
             <div class="card">
                 <h1 style="color:#0f2c59; text-align:center; font-weight:700;">Peer Assessment</h1>
-                <p style="text-align:center; color:#666; font-weight:400;">Based on 7 Habits</p>
+                <p style="text-align:center; color:#666; font-weight:400;">Based on 7 Habits by Stephen Covey</p>
                 <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
                 
                 <div class="form-group">
@@ -218,12 +218,10 @@
                 
                 <div class="section-divider" style="margin-top: 40px;"><span>DETAIL JAWABAN ANDA</span></div>
                 
-                <!-- TOGGLE BUTTON -->
                 <button id="btnToggleDetail" class="btn-outline" style="margin-bottom: 20px; font-size: 0.9rem; padding: 12px;" onclick="toggleDetails()">
                     Lihat Detail Jawaban &#9660;
                 </button>
                 
-                <!-- HIDDEN CONTAINER -->
                 <div id="resultDetailAnswers" style="display: none;"></div>
 
                 <button class="btn" style="margin-top: 30px;" onclick="continueAssessment()">Assess Next Member</button>
@@ -332,15 +330,18 @@
             }
         }
 
-        // --- TARGET SEARCHABLE DROPDOWN (FILTER LOGIC) ---
+        // --- TARGET SEARCHABLE DROPDOWN (FILTER LOGIC - BY NAME) ---
         function updateEligibleTargets() {
-            const alreadyAssessedEmails = submittedPairs
+            // Filter berdasarkan NAMA (target), bukan email
+            // Backend mengirim: { assessor: "group...", target: "NAMA TARGET" }
+            const alreadyAssessedNames = submittedPairs
                 .filter(p => p.assessor === selectedGroup.toLowerCase())
-                .map(p => p.target);
+                .map(p => p.target); 
 
+            // Filter karyawan: Satu tim DAN Namanya belum ada di daftar assessed
             eligibleTargets = employeesData.filter(e => 
                 e.team === selectedGroup && 
-                !alreadyAssessedEmails.includes(e.email)
+                !alreadyAssessedNames.includes(e.name.toLowerCase().trim())
             );
             
             const targetInput = document.getElementById('targetSearchInput');
@@ -449,17 +450,16 @@
             container.innerHTML = html;
         }
 
-        // --- NEW: TOGGLE DETAILS FUNCTION ---
         function toggleDetails() {
             const container = document.getElementById('resultDetailAnswers');
             const btn = document.getElementById('btnToggleDetail');
             
             if (container.style.display === "none") {
                 container.style.display = "block";
-                btn.innerHTML = "Tutup Detail Jawaban &#9650;"; // Up Arrow
+                btn.innerHTML = "Tutup Detail Jawaban &#9650;"; 
             } else {
                 container.style.display = "none";
-                btn.innerHTML = "Lihat Detail Jawaban &#9660;"; // Down Arrow
+                btn.innerHTML = "Lihat Detail Jawaban &#9660;"; 
             }
         }
 
@@ -552,17 +552,16 @@
                 }
             });
             document.getElementById('resultDetailAnswers').innerHTML = detailHtml;
-
-            // RESET TOGGLE STATE
             document.getElementById('resultDetailAnswers').style.display = "none";
             document.getElementById('btnToggleDetail').innerHTML = "Lihat Detail Jawaban &#9660;";
 
             const res = await saveToGoogleSheet(payload);
             
             if (res.status === 'success') {
+                // Update local state (NAME-based)
                 submittedPairs.push({ 
                     assessor: selectedGroup.toLowerCase(), 
-                    target: payload.target.email 
+                    target: payload.target.name.toLowerCase().trim() // IMPORTANT: Save NAME not Email
                 });
 
                 document.getElementById('resTargetName').innerText = payload.target.name;
